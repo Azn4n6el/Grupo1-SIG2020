@@ -1,0 +1,17 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100&display=swap');
+
+* {
+    padding: 0px;
+    margin: 0px;
+    --main-color: #B5EECC;
+    --secondary-color: #83C3A9;
+    --banner-color: #FEECC5;
+    font-family: 'Barlow', sans-serif;
+}
+
+a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
+    color:inherit;
+}
+
