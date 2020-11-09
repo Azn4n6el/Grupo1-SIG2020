@@ -34,3 +34,59 @@ header {
 .logo, .sucursal-button, .productos-button {
     margin-right: 30px;
 }
+
+/* DROPDOWN */
+
+.dropdown-products {
+    display:none;
+    position:absolute;
+    width:203px;
+ }
+
+ .productos-button:hover .dropdown-products{
+    display:block;
+}
+
+ .dropdown-item {
+    font-size: 1.2rem;
+    position:relative;
+    opacity: 0;
+    background-color:var(--main-color);
+    animation-name:dropdown;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    border-bottom:1px solid var(--secondary-color);
+    border-top:1px solid var(--secondary-color);
+    padding-top:10px;
+ }
+
+.dropdown-item:hover {
+    background-color:var(--secondary-color);
+}
+
+.a1 {
+    animation-delay: 0.05;
+}
+
+.a2 {
+     animation-delay: 0.10s;
+ }
+
+.a3 {
+    animation-delay: 0.15s;
+}
+
+.a4 {
+    animation-delay: 0.20s;
+}
+
+ @keyframes dropdown {
+    0% {
+        opacity:0;
+        bottom:25px;
+    }
+    100% {
+        opacity:1;
+        bottom:0px;
+    }
+ }
