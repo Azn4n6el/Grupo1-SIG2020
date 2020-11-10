@@ -1,5 +1,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
 
 * {
     padding: 0px;
@@ -7,6 +8,7 @@
     --main-color: #B5EECC;
     --secondary-color: #83C3A9;
     --banner-color: #FEECC5;
+    --form-color: #FCD06F;
     font-family: 'Barlow', sans-serif;
 }
 
