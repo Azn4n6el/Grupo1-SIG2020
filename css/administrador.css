@@ -1,0 +1,119 @@
+
+/*ADMINISTRADOR LOGIN*/
+
+.login-body{
+    height: 100%;
+    width: 100%;
+}
+
+.login-header {
+    min-height: 125px;
+    height: 25vh;
+    background-color:white;
+}
+.login-body-background {
+    background-color: var(--main-color);
+}
+.images-container{
+   position:absolute;
+   top: 15vh;
+   left: 15vw;
+}
+
+.basket-image {
+    position:relative;
+    top:25px;
+    left:5%;
+}
+
+.login-form {
+    padding: 10px;
+    position:absolute;
+    top:15vh;
+    right: 15vw;
+    width: 40vw;
+    background-color:var(--form-color)
+}
+
+.form-header-container {
+    display:flex;
+    justify-content: space-around;
+    margin-top:20px;
+}
+
+.form-title {
+    font-size: 3rem;
+    font-family: 'Fjalla One', sans-serif;
+}
+
+.form-rope {
+    position:absolute;
+    bottom:360px;
+    width: 4px;
+    height: 100vh;
+    background-color:black;
+}
+
+.form-circle {
+    align-self:center;
+    width: 5px;
+    height: 10px;
+    border-radius:50%;
+    border: 3px solid black;
+}
+
+.form-circle2 {
+    width:5px;
+    height:8px;
+    border-radius:50%;
+    background-color:black;
+}
+
+.login-title {
+    margin-top:20px;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 2.4rem;
+    text-align:center;
+}
+
+.form-input {
+    display:flex;
+    flex-direction: column;
+    margin: 25px 20% 0 20%;
+    font-size:1.5rem;
+    font-weight:bold;
+}
+
+.input-text {
+    margin-top:5px;
+    height:20px;
+    font-size: 1.2rem;
+    padding:5px;
+    border:2px solid white;
+    background-color:transparent;
+}
+
+.login-button {
+    margin-top:20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.sign-button {
+    padding:5px;
+    width: 25%;
+    font-size: 1.5rem;
+    background-color: var(--secondary-color);
+    border: none;
+    color:white;
+    font-weight:bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.sign-button:hover{
+    transform:scale(1.1);
+    transition: transform 0.2s;
+}
+
+/* DASHBOARD */
