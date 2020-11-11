@@ -170,6 +170,7 @@
     justify-content:space-between;
     background-color: var(--main-color);
     width: 100%;
+    position:relative;
     height: 100px;
 }
 
@@ -181,6 +182,7 @@
 .header-right, .header-left{
     display:flex;
     align-items:center;
+   
 }
 .links-image {
     display:block;
@@ -192,12 +194,11 @@
     position:absolute;
     top:50px;
     right:135px;
-    background-color:#20373B;
+    background-color:#F1471D;
     color:white;
     border-radius:50%;
     padding:5px;
     font-weight:bold;
-
 }
 
 /* ALL DASHBOARD */
@@ -213,5 +214,54 @@
     height:100%;
     width:100%;
 }
+.dashboard-body {
+    margin: 20px;
+    margin-top: 40px;
+}
+
+
+
+/* PANTALLA NOTIFICACIONES */
+.custom-table {
+    margin-top:40px;
+    border-collapse: collapse;
+    text-align:center;
+    width:100%;
+    
+}
+
+.custom-table td, .custom-table th {
+    border: 2px solid #F1471D;
+    padding:5px;
+}
+
+.custom-table th {
+    font-size:1.6rem;
+    color: #F1471D;
+    border-bottom: 3px solid #F1471D;;
+}
+
+.custom-table td {
+    font-size:1.4rem;
+}
+
+.custom-table tbody tr:nth-child(odd) {
+    background-color:#FCDAD2;
+}
+
+.table-send {
+    position:relative;
+    top:5px;
+    display:block;
+    width:50%;
+    margin:auto;
+    cursor:pointer;
+}
+
+.body-title {
+    color: #f1471d;
+    font-size: 1.3rem;
+}
+
 
 
