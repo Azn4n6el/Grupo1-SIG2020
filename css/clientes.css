@@ -25,6 +25,7 @@ header {
 .links-image {
     display:flex;
     align-items:center;
+    color:black;
 }
 
 .links-image img {
