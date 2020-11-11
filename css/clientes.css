@@ -79,6 +79,61 @@ header {
 .a4 {
     animation-delay: 0.20s;
 }
+/* Elegir Sucursal*/
+.image-container{
+    position:absolute;
+    top: 19rem;
+    left: 1rem;
+
+}
+.circle{
+    margin-top:2rem;
+    margin-right: 5rem;
+    background-color:var(--third-color);
+    width: 400px;
+    height: 400px;
+    border: 1px solid var(--secondary-color);
+    border-radius: 70%;
+    padding:20px;
+    float:right;
+}
+.sucursal-info{
+    margin-top:5rem;
+    color:var(--letter-color);
+    font-size: 25px;
+    font-weight: 10px;
+    font-family: 'Fjalla One', sans-serif;
+    text-align: center;
+    line-height: 3rem;
+}
+.next-button {
+    margin-top:20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+.next-button {
+    padding:5px;
+    width: 10rem;
+    font-size: 15px;
+    background-color: var(--button-color);
+    border: none;
+    border-radius: 4px;
+    color:white;
+    font-weight:bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.next-button:hover{
+    transform:scale(1.1);
+    transition: transform 0.1s;
+}
+
+.select{
+    border-radius:4px;
+    width: 10rem;
+    font-size:15px;
+}
 
  @keyframes dropdown {
     0% {
