@@ -116,22 +116,17 @@
     transition: transform 0.2s;
 }
 
-/* DASHBOARD */
-
-.dashboard-container {
-    display:flex;
-    height:100%;
-    width:100%;
-}
+/* DASHBOARD SIDENAV*/
 
 .dashboard-nav {
     background-color: var(--secondary-color);
     min-width:250px;
+    max-width:250px;
     min-height:100vh;
 }
 .nav-title {
-    margin-top:20px;
-    margin-bottom:40px;
+    padding-top:20px;
+    padding-bottom:40px;
     font-size: 1.7rem;
     text-align:center;
     color:white;
@@ -145,6 +140,13 @@
     text-align:center;
     margin:30px 40px;
     font-size: 1.3rem;
+    transition: transform 0.1s;
+}
+
+
+.list-links:hover{
+    transform: scale(1.1);
+    transition: transform 0.1s;
 }
 
 .list-links li {
@@ -161,6 +163,7 @@
     align-self:flex-end;
 }
 
+/* DASHBOARD HEADER */
 .dashboard-header {
     display:flex;
     align-items: center;
@@ -184,3 +187,31 @@
     margin-top:15px;
     margin-right: 20px;
 }
+
+.cant-notifications {
+    position:absolute;
+    top:50px;
+    right:135px;
+    background-color:#20373B;
+    color:white;
+    border-radius:50%;
+    padding:5px;
+    font-weight:bold;
+
+}
+
+/* ALL DASHBOARD */
+.dashboard-container {
+    display:flex;
+    height:100%;
+    width:100%;
+}
+
+.dashboard-content {
+    display:flex;
+    flex-direction: column;
+    height:100%;
+    width:100%;
+}
+
+
