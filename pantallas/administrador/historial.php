@@ -1,3 +1,8 @@
+<?php
+include '../../procesos/Conexion.php';
+$obj = new Conexion();
+$notificaciones = $obj->GetNotificaciones();
+?>
 <!DOCTYPE html>
 <html lang="en">
 

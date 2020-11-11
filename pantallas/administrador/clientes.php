@@ -1,3 +1,8 @@
+<?php
+include '../../procesos/Conexion.php';
+$obj = new Conexion();
+$notificaciones = $obj->GetNotificaciones();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,12 +19,8 @@
         <?php require 'dashboard-nav.php' ?>
         <div class="dashboard-content">
             <?php require 'dashboard-header.php' ?>
-            
-
         </div>
-
     </div>
-
 </body>
 
 </html>
