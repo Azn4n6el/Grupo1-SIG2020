@@ -7,6 +7,6 @@
         <a class="links-image" href="notificaciones.php" title="Ver Notificaciones"><img src="../../images/noun_notification_1594275.svg" alt="Notificaciones" width="80" height="80">
             <div class="cant-notifications"><?= count($notificaciones) ?></div>
         </a>
-        <a class="links-image" href="enviarPedidos.php" title="Enviar Pedidos"><img src="../../images/noun_send_889264.svg" alt="EnviarProductos" width="80" height="65"></a>
+        <a class="links-image" href="../../procesos/unsetNotification.php" title="Enviar Pedidos"><img src="../../images/noun_send_889264.svg" alt="EnviarProductos" width="80" height="65"></a>
     </div>
 </header>
