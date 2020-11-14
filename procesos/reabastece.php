@@ -31,7 +31,7 @@ if ($_POST['notificacion'] == true){
     }
 
     $sucursal = $_POST['sucursal'];
-    $centro = 123;
+    $centro = $_SESSION['user-data']['ruc_centro'];
     $precio = $_POST['precio'];
     $cantidad = $_POST['cantidad'];
     $msj = $obj->AddReabastece($suministro,$sucursal,$centro,$precio,$cantidad);

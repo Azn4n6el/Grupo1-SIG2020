@@ -2,7 +2,12 @@
 include '../../procesos/Conexion.php';
 session_start();
 $obj = new Conexion();
-$notificaciones = $obj->GetNotificaciones();
+if (!isset($_SESSION['user-data'])) {
+    header('Location: login.php');
+}
+
+$ruc_centro = $_SESSION['user-data']['ruc_centro'];
+$notificaciones = $obj->GetNotificaciones($ruc_centro);
 if (isset($_SESSION['dataNotifications'])) {
     $data = $_SESSION['dataNotifications'];
     $notification = 1;
@@ -11,7 +16,7 @@ if (isset($_SESSION['dataNotifications'])) {
     $data = "";
 }
 
-$sucursales = $obj->GetSucursales();
+$sucursales = $obj->GetSucursales($ruc_centro);
 $suministros = $obj->GetSuministros();
 
 ?>

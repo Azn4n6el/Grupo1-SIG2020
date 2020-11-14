@@ -1,3 +1,13 @@
+<?php 
+session_start();
+if (isset($_SESSION['message'])){
+    $error = $_SESSION['message'];
+    unset($_SESSION['message']);
+} else {
+    $error = '';
+}
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,7 +25,7 @@
             <img src="../../images/mujercompra.png" alt="" srcset="">
             <img src="../../images/basket.png" alt="basket" srcset="" class="basket-image">
         </div>
-        <form action="" class="login-form">
+        <form action="../../procesos/validarLogin.php" class="login-form" method="POST">
             <div class="form-header-container">
                 <div class="form-circle">
                     <div class="form-circle2">
@@ -35,18 +45,22 @@
                 Inicio de Sesión
             </div>
             <div class="form-input">
-                <label for="usuario">Usuario:</label>
-                <input type="text" id="usuario" name="usuario" class="input-text" autofocus>
+                <label for="cedula">Cédula:</label>
+                <input type="text" id="cedula" name="cedula" class="input-text" autofocus required>
             </div>
             <div class="form-input">
                 <label for="passwd">Contraseña:</label>
-                <input type="password" id="passwd" name="passwd" class="input-text">
+                <input type="password" id="passwd" name="passwd" class="input-text" required>
             </div>
+            <?php if ($error != '') :?>
+            <div class="error-message">
+                <h4><?=$error?></h4>
+            </div>
+            <?php endif ?>
             <div class="login-button">
                 <input type="submit" value="Iniciar" class="sign-button">
             </div>
         </form>
     </div>
 </body>
-
 </html>

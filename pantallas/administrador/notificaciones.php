@@ -1,7 +1,15 @@
 <?php
+
 include '../../procesos/Conexion.php';
+session_start();
+if (!isset($_SESSION['user-data'])){
+    header('Location: login.php');
+}
+
 $obj = new Conexion();
-$notificaciones = $obj->GetNotificaciones();
+
+$ruc_centro = $_SESSION['user-data']['ruc_centro'];
+$notificaciones = $obj->GetNotificaciones($ruc_centro);
 ?>
 <!DOCTYPE html>
 <html lang="en">
