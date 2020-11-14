@@ -123,6 +123,9 @@
     min-width:250px;
     max-width:250px;
     min-height:100vh;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .nav-title {
     padding-top:20px;
@@ -155,12 +158,11 @@
 }
 
 .logout {
-    position:absolute;
     font-weight: bolder;
     color:#FFC000;
     width:150px;
     bottom:20px;
-    align-self:flex-end;
+  
 }
 
 /* DASHBOARD HEADER */
@@ -206,6 +208,8 @@
     display:flex;
     height:100%;
     width:100%;
+    min-width: 700px;
+ 
 }
 
 .dashboard-content {
@@ -220,14 +224,16 @@
 }
 
 
-
 /* PANTALLA NOTIFICACIONES */
 .custom-table {
-    margin-top:40px;
     border-collapse: collapse;
     text-align:center;
     width:100%;
     
+}
+
+.responsive-table{
+    overflow-x:auto;
 }
 
 .custom-table td, .custom-table th {
@@ -261,7 +267,124 @@
 .body-title {
     color: #f1471d;
     font-size: 1.3rem;
+    margin-bottom:40px;
 }
 
 
+/* PANTALLA ENVIAR PEDIDOS */
 
+.form-group {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:space-evenly;
+    margin: 0 20px;
+    margin-bottom:20px;
+}
+
+
+.form-input2 {
+    display:flex;
+    flex-direction: column;
+    width:35%;
+    min-width: 200px;
+    font-size:1.5rem;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+.enviar-input {
+    margin-top:10px;
+    font-size:1.3rem;
+    padding:5px;
+    border: 2px solid black;
+}
+
+.total-text {
+    text-align:center;
+}
+
+.disabled-total {
+    background-color:rgb(236, 236, 236);
+    cursor: not-allowed;
+}
+
+
+.enviar-button-container {
+    text-align:end;
+    margin-right:20px;
+    margin-top:20px;
+}
+
+.enviar-button {
+    padding: 10px 20px;
+    font-size:1.4rem;
+    font-weight:bold;
+    background-color:white;
+    border-radius: 10px;
+    color: #f1471d;
+    border: 2px solid #f1471d;
+    cursor:pointer;
+}
+
+/* CUSTOM SELECT */
+.custom-select {
+    appearance: none;
+    width:100%;
+    cursor:pointer;
+}
+
+.select-container {
+    width:100%;
+    position:relative;
+}
+
+.select-container:after {
+  	content: '▼';
+  	font-size: 24px;
+  	position: absolute;
+  	top: 14px;
+  	right: 9px;
+    color: var(--secondary-color);
+    pointer-events: none;
+    transition: transform 0.2s;
+}
+.select-container:hover:after {
+    transform:scale(1.5);
+    transition: transform 0.2s;
+}
+
+/* CUSTOM NUMBER INPUT */
+.number-input {
+    appearance: textfield;
+    width:100%;
+    box-sizing:border-box
+}
+
+.number-container {
+    display:flex;
+    width: 100%;
+    position: relative;
+}
+
+.number-button-container{
+    position:absolute;
+    right:2.5px;
+    margin-top:12px;
+    display:flex;
+    flex-direction: column;
+}
+
+.number-button {
+    width:25px;
+    height:17px;
+    font-size:0.9rem;
+    border:none;
+    color: var(--secondary-color);
+    cursor:pointer;
+    transition: transform 0.2s;
+}
+
+.number-button:hover {
+    transform:scale(1.5);
+    transition: transform 0.2s;
+}

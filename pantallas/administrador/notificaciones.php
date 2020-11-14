@@ -23,35 +23,40 @@ $notificaciones = $obj->GetNotificaciones();
                 <div class="body-title">
                     <h1>Notificaciones</h1>
                 </div>
-                <table class="custom-table">
-                    <thead>
-                        <tr>
-                            <th>Sucursal</th>
-                            <th>Categoría</th>
-                            <th>Producto</th>
-                            <th>Tamaño</th>
-                            <th>Cantidad</th>
-                            <th>Fecha del Pedido</th>
-                            <th>Enviar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php for ($i = 0; $i < count($notificaciones); $i++) : ?>
+                <?php if (count($notificaciones) != 0) :?>
+                <div class="responsive-table">
+                    <table class="custom-table">
+                        <thead>
                             <tr>
-                                <td><?= $notificaciones[$i]['direccion'] ?></td>
-                                <td><?= $notificaciones[$i]['categoria'] ?></td>
-                                <td><?= $notificaciones[$i]['producto'] ?></td>
-                                <td><?= $notificaciones[$i]['tamano'] ?></td>
-                                <td><?= $notificaciones[$i]['cantidad'] ?> cajas</td>
-                                <td><?= date('d-m-Y', strtotime($notificaciones[$i]['fecha_pedido'])) ?></td>
-                                <td><a onclick="sendPedidos(<?=$i?>)" class="table-send" title="Enviar Pedidos"><img src="../../images/noun_send_889264.svg" alt="EnviarProductos" width="50" height="45"></a></td>
+                                <th>Sucursal</th>
+                                <th>Categoría</th>
+                                <th>Producto</th>
+                                <th>Tamaño</th>
+                                <th>Cantidad</th>
+                                <th>Fecha del Pedido</th>
+                                <th>Enviar</th>
                             </tr>
-                        <?php endfor ?>
+                        </thead>
+                        <tbody>
+                            <?php for ($i = 0; $i < count($notificaciones); $i++) : ?>
+                                <tr>
+                                    <td><?= $notificaciones[$i]['direccion'] ?></td>
+                                    <td><?= $notificaciones[$i]['categoria'] ?></td>
+                                    <td><?= $notificaciones[$i]['producto'] ?></td>
+                                    <td><?= $notificaciones[$i]['tamano'] ?></td>
+                                    <td><?= $notificaciones[$i]['cantidad'] ?> cajas</td>
+                                    <td><?= date('d-m-Y', strtotime($notificaciones[$i]['fecha_pedido'])) ?></td>
+                                    <td><a onclick="sendPedidos(<?= $i ?>)" class="table-send" title="Enviar Pedidos"><img src="../../images/noun_send_889264.svg" alt="EnviarProductos" width="50" height="45"></a></td>
+                                </tr>
+                            <?php endfor ?>
 
-                    </tbody>
-                </table>
-                            
-                <form action="dataPedido.php" method="POST" id="dataPedido">
+                        </tbody>
+                    </table>
+                </div>
+                <?php else :?>
+                    <h2>No tiene ninguna notificación en el momento</h2>
+                <?php endif ?>
+                <form action="../../procesos/dataPedido.php" method="POST" id="dataPedido">
                     <input id="dataNumber" type="text" name="dataNumber" value="" hidden>
                 </form>
             </div>
