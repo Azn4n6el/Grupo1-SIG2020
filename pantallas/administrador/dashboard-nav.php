@@ -19,5 +19,5 @@
         </ul>
     </div>
 
-    <a href="login.php" class="list-links logout">Cerrar Sesión</a>
+    <a href="../../procesos/logout.php" class="list-links logout">Cerrar Sesión</a>
 </nav>
