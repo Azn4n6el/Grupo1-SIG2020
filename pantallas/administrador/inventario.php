@@ -26,6 +26,7 @@ $notificaciones = $obj->GetNotificaciones($ruc_centro);
         <div class="dashboard-content">
             <?php require 'dashboard-header.php' ?>
         </div>
+        
     </div>
 </body>
 
