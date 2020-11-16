@@ -139,7 +139,7 @@ if (isset($_SESSION['message'])) {
 
 
     //INICIALIZAR GRÁFICA
-    let chart = createChart(comprasChart, 0, 0, 'Productos Más Comprados', 'Productos', 'Cantidad de Cajas Compradas');
+    let chart = createChart(comprasChart, 0, 0, 'Productos Más Comprados','Cajas Compradas', 'Productos', 'Cantidad de Cajas Compradas');
 
     //LLENAR LOS SELECTS
     for (const item of sucursales) {
@@ -215,7 +215,6 @@ if (isset($_SESSION['message'])) {
             }
         
             validateType();
-
     }
 
 
