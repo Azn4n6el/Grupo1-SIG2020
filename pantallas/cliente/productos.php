@@ -26,6 +26,8 @@ if (!empty($_REQUEST['sucursal']['categoria'])){
     <link rel="stylesheet" href="../../css/clientes-products.css">
     <link rel="stylesheet" href="../../css/styles.css">
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="../../css/clientes.css">
+    <link rel="stylesheet" href="../../css/styles.css">
 </head>
 
 <body>
