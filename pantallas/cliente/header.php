@@ -1,7 +1,7 @@
 <header class="header-clientes">
     <div class="left-side-header">
         <div class="logo">
-            <a href="main.php"><img src="../../images/super instant1.png" alt="logoEmpresa" width="150"></a>
+            <a id="logo-button" href="main.php"><img src="../../images/super instant1.png" alt="logoEmpresa" width="150"></a>
         </div>
         <div class="sucursal-button">
             <a class="links-image" href="elegirSucursal.php"><img src="../../images/noun_Store_980053.svg" alt="imgSucursal" width="60" height="60">SUCURSAL</a>

@@ -1,17 +1,12 @@
 <?php
 include '../../procesos/Conexion.php';
-session_start();
-if (!empty($_REQUEST['sucursal'])){
-    $sucursal=$_REQUEST['sucursal'];
-    $obj = new Conexion();
-    $message = $obj->GetSucursal($sucursal);
-    
-}else{
-    $errorMessage="No ha seleccionado una sucursal";
-}
+
+$obj = new Conexion();
+$sucursales = $obj->GetAllSucursales();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,42 +14,47 @@ if (!empty($_REQUEST['sucursal'])){
     <link rel="stylesheet" href="../../css/clientes.css">
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
-    <header class="header-sucursal" >
-        <div class="left-side-header">
-            <div class="logo">
-                <a href="main.php"><img src="../../images/super instant1.png" alt="logoEmpresa" width="150"></a>
-             </div>
-    </header>
-<body>
-    <div class="left-side">
-            <div class="image-container">
-                <img src="../../images/cajero.png" alt="cashier" width="600">
-            </div>
-    <div>
-    <div class="right-side">
-        <div class="circle">
-                <div class="sucursal-info">
-                    <h3>Bienvenido!</h3>
-                    <h4><label for="select-sucursal">Elegir Sucursal:</label></h4>
-                    <div class="select-container">
-                    <select id="sucursal">
-                    <option disabled selected>Selecione una sucursal</option>
-                    <?php
-                        $cnn = new Conexion();
-                        $sucursal = $cnn->GetSucursal();
-                        for ($i = 0; $i < count($sucursal); $i++) : ?>
-                            <option value=<?= $sucursal[$i]['ruc_sucursal'] ?>> <?= strtoupper($sucursal[$i]['nombre']) ?></option>
-                            <small><?=$errorMessage?></small>
-                    <?php endfor ?>
-                    </select>
-                        </div>
-                    <form action="../../procesos/Conexion.php" method="POST" id="sucursal">
-                    <button class="next-button">Siguiente</button>
-                </form>
-                </div>   
-        </div>  
-    </div>  
-   
-</body>
-</html>
 
+<body>
+    <?php require('header.php'); ?>
+    <div class="sucursal-body">
+        <div class="image-container">
+            <img src="../../images/cajero.png" alt="cashier" width="900">
+        </div>
+        <div class="circle">
+            <form action="../../procesos/sessionSucursal.php" method="POST" class="form-sucursal">
+                <div class="form-title">
+                    <h1>Bienvenido!</h1>
+                </div>
+                <div class="form-group">
+                    <div class="form-single-input">
+                        <label for="select-sucursal">Elegir Sucursal:</label>
+                        <div class="select-container">
+                            <select id="select-sucursal" class="custom-select enviar-input" required>
+                                <option value="0" disabled selected>Seleccione una sucursal</option>
+                                <?php for ($i = 0; $i < count($sucursales); $i++) : ?>
+                                    <option value="<?= $sucursales[$i]['ruc_sucursal'] ?>">
+                                        <?=$sucursales[$i]['direccion']?>
+                                    </option>
+                                <?php endfor ?>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <input type="submit" class="next-button" value="Siguiente">
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    let logoButton = document.getElementById('logo-button');
+    let sucursalButton = document.getElementsByClassName('sucursal-button');
+    let productosButton = document.getElementsByClassName('productos-button');
+    let carritoButton = document.getElementsByClassName('carrito-button');
+    sucursalButton[0].style.display = 'none';
+    productosButton[0].style.display = 'none';
+    carritoButton[0].style.display = 'none';
+    logoButton.setAttribute('href', '#');
+</script>

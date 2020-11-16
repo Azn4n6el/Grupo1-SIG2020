@@ -54,7 +54,7 @@ if (isset($_SESSION['message'])) {
                             <button type="button" class="type-button" id="porSucursal" onclick="showSucursal()">Por Sucursal</button>
                         </div>
                     </div>
-                    <div class="form-group2">
+                    <div class="form-group">
                         <div class="form-input3">
                             <label for="sucursal">Sucursal</label>
                             <div class="select-container">
