@@ -6,7 +6,6 @@ DEFINE('BASE_DATOS', "superinstant1");
 class Conexion
 {
     private $conexion_bd;
-
     function ValidateLogin($cedula, $contrasena)
     {
         $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);

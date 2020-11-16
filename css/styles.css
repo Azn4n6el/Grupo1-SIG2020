@@ -8,7 +8,11 @@
     margin: 0px;
     --main-color: #B5EECC;
     --secondary-color: #83C3A9;
+    --third-color:#d5f5e8;
     --banner-color: #FEECC5;
+    --second-nav:#FCBD34;
+    --button-color: #F46D32;
+    --letter-color:#0d242c;
     --form-color: #FCD06F;
     font-family: 'Barlow', sans-serif;
 }
@@ -83,4 +87,5 @@ ul, li {
     transform:scale(1.1);
     transition: transform 0.2s;
 }
+
 
