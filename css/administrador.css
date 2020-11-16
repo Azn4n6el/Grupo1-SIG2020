@@ -144,7 +144,7 @@
 
 .list-links {
     display:block;
-    background-color:#20373B;
+    background-color:var(--button-color);
     border-radius:8px;
     padding:10px;
     text-align:center;
@@ -183,6 +183,7 @@
     height: 100px;
     position:sticky;
     top:0;
+    z-index: 1;
 }
 
 .dashboard-logo {
@@ -205,7 +206,7 @@
     position:absolute;
     top:50px;
     right:135px;
-    background-color:#F1471D;
+    background-color:var(--title-color);;
     color:white;
     border-radius:50%;
     padding:5px;
@@ -227,8 +228,10 @@
     width:100%;
 }
 .dashboard-body {
-    margin: 20px;
-    margin-top: 40px;
+    padding: 20px;
+    padding-top: 40px;
+    overflow:auto;
+    height:75vh;
 }
 
 
@@ -247,14 +250,14 @@
 }
 
 .custom-table td, .custom-table th {
-    border: 2px solid #F1471D;
+    border: 2px solid var(--title-color);;
     padding:5px;
 }
 
 .custom-table th {
     font-size:1.6rem;
-    color: #F1471D;
-    border-bottom: 3px solid #F1471D;;
+    color: var(--title-color);;
+    border-bottom: 3px solid var(--title-color);;;
 }
 
 .custom-table td {
@@ -279,7 +282,7 @@
 }
 
 .body-title {
-    color: #f1471d;
+    color: var(--title-color);;
     font-size: 1.3rem;
     margin-bottom:40px;
 }
@@ -335,8 +338,8 @@
     font-weight:bold;
     background-color:white;
     border-radius: 10px;
-    color: #f1471d;
-    border: 2px solid #f1471d;
+    color: var(--title-color);
+    border: 2px solid var(--title-color);;
     cursor:pointer;
 }
 
@@ -401,4 +404,63 @@
 .number-button:hover {
     transform:scale(1.5);
     transition: transform 0.2s;
+}
+
+/* PANTALLA CLIENTES */
+
+.filtros-title {
+    margin: 0 20px;
+   font-size:1.4rem;
+   display:flex;
+   align-items:center;
+}
+
+.form-group2{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-evenly;
+    margin: 0 20px;
+    margin-bottom:20px;
+}
+
+.form-input3 {
+    display:flex;
+    flex-direction: column;
+    width:30%;
+    min-width: 200px;
+    font-size:1.5rem;
+    font-weight:bold;
+    margin-top:20px;
+}
+
+.filter-type {
+    margin: 0 20px;
+    display:flex;
+    width:40%;
+}
+
+.type-button {
+    padding:5px;
+    width:100%;
+    font-size: 1.2rem;
+    margin-left:40px;
+    background-color: var(--button-color);
+    border-radius: 8px;
+    padding:10px;
+    color:white;
+    font-weight:bold;
+    border:none;
+    cursor:pointer;
+    transition: transform 0.2s;
+}
+
+.type-button:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+.chart-container {
+    margin:40px auto;
+    position:relative;
+    width:70vw;
 }
