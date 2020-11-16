@@ -1,3 +1,15 @@
+<?php
+include '../../procesos/Conexion.php';
+session_start();
+if (!empty($_REQUEST['sucursal'])){
+    $sucursal=$_REQUEST['sucursal'];
+    $obj = new Conexion();
+    $message = $obj->GetSucursal($sucursal);
+    
+}else{
+    $errorMessage="No ha seleccionado una sucursal";
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,16 +36,21 @@
                 <div class="sucursal-info">
                     <h3>Bienvenido!</h3>
                     <h4><label for="select-sucursal">Elegir Sucursal:</label></h4>
-                    <select class="select" id="select-sucursal">
-                        <option value="Option 1">Tocumen</option>
-                        <option value="Option 2">El Crisol</option>
-                        <option value="Option 3">El Dorado</option>
-                        <option value="Option 4">Via España</option>
-                        <option value="Option 5">Tumba Muerto</option>
+                    <div class="select-container">
+                    <select id="sucursal">
+                    <option disabled selected>Selecione una sucursal</option>
+                    <?php
+                        $cnn = new Conexion();
+                        $sucursal = $cnn->GetSucursal();
+                        for ($i = 0; $i < count($sucursal); $i++) : ?>
+                            <option value=<?= $sucursal[$i]['ruc_sucursal'] ?>> <?= strtoupper($sucursal[$i]['nombre']) ?></option>
+                            <small><?=$errorMessage?></small>
+                    <?php endfor ?>
                     </select>
-                    <br>
-                     <input type="submit" value="Siguiente" class="next-button">
-                        
+                        </div>
+                    <form action="../../procesos/Conexion.php" method="POST" id="sucursal">
+                    <button class="next-button">Siguiente</button>
+                </form>
                 </div>   
         </div>  
     </div>  

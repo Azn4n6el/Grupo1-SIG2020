@@ -8,6 +8,7 @@
     --secondary-color: #83C3A9;
     --third-color:#d5f5e8;
     --banner-color: #FEECC5;
+    --second-nav:#FCBD34;
     --button-color: #F46D32;
     --letter-color:#0d242c;
     font-family: 'Barlow', sans-serif;
@@ -17,4 +18,5 @@ a:link, a:visited, a:hover, a:active {
     text-decoration: none;
     color:inherit;
 }
+
 
