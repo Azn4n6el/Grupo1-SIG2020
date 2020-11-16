@@ -1,15 +1,15 @@
-const createChart = (id, XLabels, dataset, title,xtitle, ytitle) => {
+const createChart = (id, XLabels, dataset, title, legendLabel,xtitle, ytitle) => {
 
     let myChart = new Chart(id, {
         type: 'bar',
         data: {
             labels: XLabels,
             datasets: [{
-                label: 'Cajas Compradas',
+                label: legendLabel,
                 data: dataset,
-                backgroundColor:'rgba(255, 99, 132, 0.2)',
-                borderColor:'rgba(255, 99, 132, 1)',
-                borderWidth: 1
+                backgroundColor:'rgba(131, 195, 169, 0.3)',
+                borderColor:'rgba(131, 195, 169, 1)',
+                borderWidth: 2
             }]
         },
         options: {
