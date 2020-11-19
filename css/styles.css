@@ -11,7 +11,7 @@
     --third-color:#d5f5e8;
     --banner-color: #FEECC5;
     --second-nav:#FCBD34;
-    --button-color: #F46D32;
+    --button-color: #20373B;
     --letter-color:#0d242c;
     --form-color: #FCD06F;
     --title-color:  #f1471d;
@@ -46,7 +46,7 @@ ul, li {
     animation-name: slide-down;
     animation-duration: 1s;
     animation-fill-mode: forwards;
-    margin: 15% auto;
+    margin:auto;
     background-color:white;
     padding:25px;
     border-radius:5px;
@@ -59,7 +59,7 @@ ul, li {
         margin-top: -20%;
     }
     100% {
-        margin-top:15%;
+        margin-top:10%;
     }
 }
 
@@ -82,6 +82,12 @@ ul, li {
     font-size:1.3rem;
     font-weight: bold;
     transition: transform 0.2s;
+}
+
+.no-button {
+    background-color: var(--form-color);
+    display:none;
+    margin-left: 20px;
 }
 
 .ok-button:hover{

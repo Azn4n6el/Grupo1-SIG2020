@@ -84,20 +84,6 @@ if (isset($_SESSION['message'])) {
                 </div>
             </div>
         </div>
-
-    </div>
-    <div class="custom-modal" id="custom-modal" onclick="closeModal()">
-        <div class="modal-box">
-            <div class="img-success">
-                <img src="https://img.icons8.com/flat_round/100/000000/checkmark.png" id="msg-icon" />
-            </div>
-            <div class="modal-message">
-                <h2 id="modal-msg">¡Reabastecido Satisfactoriamente!</h2>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="ok-button" onclick="closeModal()">OK</button>
-            </div>
-        </div>
     </div>
 </body>
 
@@ -333,6 +319,7 @@ if (isset($_SESSION['message'])) {
     if (message != '') {
         let modal = document.getElementById('custom-modal');
         let msg = document.getElementById('modal-msg');
+        document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/100/000000/checkmark.png";
         if (message.indexOf('Error') >= 0) {
             document.getElementById('msg-icon').src = "https://img.icons8.com/officel/100/000000/high-risk.png";
         }

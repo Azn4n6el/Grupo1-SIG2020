@@ -1,6 +1,9 @@
 <?php
 include '../../procesos/Conexion.php';
-
+session_start();
+if (isset($_SESSION['sessionSucursal'])){
+    header('Location: main.php');
+}
 $obj = new Conexion();
 $sucursales = $obj->GetAllSucursales();
 ?>
@@ -30,7 +33,7 @@ $sucursales = $obj->GetAllSucursales();
                     <div class="form-single-input">
                         <label for="select-sucursal">Elegir Sucursal:</label>
                         <div class="select-container">
-                            <select id="select-sucursal" class="custom-select enviar-input" required>
+                            <select id="select-sucursal" name="select-sucursal" class="custom-select enviar-input" required>
                                 <option value="0" disabled selected>Seleccione una sucursal</option>
                                 <?php for ($i = 0; $i < count($sucursales); $i++) : ?>
                                     <option value="<?= $sucursales[$i]['ruc_sucursal'] ?>">
@@ -49,6 +52,7 @@ $sucursales = $obj->GetAllSucursales();
 
 </html>
 <script>
+    window.localStorage.removeItem('carrito');
     let logoButton = document.getElementById('logo-button');
     let sucursalButton = document.getElementsByClassName('sucursal-button');
     let productosButton = document.getElementsByClassName('productos-button');

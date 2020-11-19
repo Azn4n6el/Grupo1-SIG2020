@@ -1,4 +1,10 @@
 
+body {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
 /* PANTALLA MAIN*/
 .header-clientes {
     background-color: var(--main-color);
@@ -25,6 +31,7 @@
     display:flex;
     align-items:center;
     color:black;
+    cursor:pointer;
 }
 
 .links-image img {
@@ -58,6 +65,7 @@
     border-bottom:1px solid var(--secondary-color);
     border-top:1px solid var(--secondary-color);
     padding-top:10px;
+    z-index: 1;
  }
  
  @keyframes dropdown {
@@ -91,6 +99,7 @@
     animation-delay: 0.20s;
 }
 /* Elegir Sucursal*/
+
 .image-container{
     position:absolute;
     bottom:10px;
@@ -148,12 +157,196 @@
     transition: transform 0.1s;
 }
 
-.page-footer{
-    margin-top:10rem;
-    background-color:var(--main-color);
+/* MAIN */
+
+.sucursal-title {
+    padding-top: 10px;
+    padding-left: 20px;
+    font-size: 1.7rem;
+    font-weight: bold;
+}
+
+.carousel-container {
+    margin-top:10px;
+    width:100%;
+    min-width:1000px;
+    min-height: 200px;
+    height: 40vh;
+    position:relative;
+    overflow:hidden;
+}
+
+.carousel-button-container {
+    display:flex;
+    justify-content: space-between;
+    position:relative;
+    width:100%;
+    top: 40%;
+    padding:0 25px;
+    box-sizing: border-box;
+}
+
+.carousel-button {
+    cursor:pointer;
+    background:none;
+    border:none;
+    transition: transform 0.3s;
+    outline:none;
+}
+
+.carousel-button:hover {
+    transform:scale(1.2);
+    transition: transform 0.3s;
+}
+
+.slides {
+    width: 100%;
+    height: 100%;
+    position:absolute;
+}
+
+.prevSlide {
+    animation-name: toprev;
+    animation-duration:1s;
+    animation-fill-mode: forwards;
+   
+}
+
+.nextSlide {
+    animation-name: tonext;
+    animation-duration:1s;
+    animation-fill-mode: forwards;
+ 
+}
+
+@keyframes tonext {
+    0% {
+        right: 0%;
+      
+    }
+    100% {
+        right: 100%;
+    }
+}
+
+@keyframes toprev {
+    0% {
+        left: 0%;
+     
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.products-container {
+    padding: 10px 30px;
+    min-width: 1000px;
+    width:100%;
+    min-height: 200px;
+    display:flex;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+    position:relative;
+    overflow:hidden;
+}
+
+.product {
+    width: 12vw;
+    min-width: 150px;
+    text-align:center;
+    border: 2px solid var(--button-color);
+    border-radius: 5px;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-size:1.3rem;
+    margin: 0 10px;
+    position:relative;
+    animation-name: appear;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+
+@keyframes appear {
+    0% {
+        opacity: 0;
     
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.product-img {
+    width:100%;
+    height:150px;
+}
+
+.product-label {
+    font-weight: bold;
+}
+
+
+.buy-container {
+    margin-top: 5px;
+}
+
+.buy-container>button {
+    width:100%;
+    height:35px;
+    font-size:1.3rem;
+    border:none;
+    border-radius:0 0 3px 3px;
+    cursor:pointer;
+    background-color:var(--button-color);
+    color:white;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.buy-container>button:hover {
+    background-color: var(--title-color);
+    transition: background-color 0.2s;
+}
+
+
+.product-button-container {
+    position:absolute;
+    display:flex;
+    justify-content:space-between;
+    width:100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    top:35%;
+}
+
+.cant-compras {
+    position:absolute;
+    top:50px;
+    right:165px;
+    background-color:var(--title-color);;
+    color:white;
+    border-radius:50%;
+    padding:5px;
+    font-weight:bold;
+    text-align: center;
+    min-width: 20px;
+
+}
+
+.page-footer{
+    background-color:var(--main-color);
+    padding-top:10px;
+    width:100%;
+    min-width: 1000px;
+    flex-grow:1;
 }
   .footer-copyright{
-      background-color:var(--secondary-color);
-      font-size: 25px;
+    text-align: center;
+    background-color:var(--secondary-color);
+    font-size: 25px;
+    height:100%;
+     
   }
