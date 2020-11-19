@@ -7,12 +7,12 @@
             <a class="links-image" onclick="confirmDelete()"><img src="../../images/noun_Store_980053.svg" alt="imgSucursal" width="60" height="60">SUCURSAL</a>
         </div>
         <div class="productos-button">
-            <a class="links-image" href="#"><img src="../../images/noun_product_1375596.svg" alt="imgProducto" width="60" height="60">PRODUCTOS</a>
+            <a class="links-image"><img src="../../images/noun_product_1375596.svg" alt="imgProducto" width="60" height="60">PRODUCTOS</a>
             <div class="dropdown-products">
-                <a class="links-image a1 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=sodas"><img src="../../images/noun_soda_3320346.svg" alt="imgProducto" width="60" height="50">SODAS</a>
-                <a class="links-image a2 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=jugos"><img src="../../images/noun_juice_3365295.svg" alt="imgProducto" width="60" height="50">JUGOS</a>
-                <a class="links-image a3 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=agua"><img src="../../images/noun_Water Bottle_3414064.svg" alt="imgProducto" width="60" height="50">AGUAS</a>
-                <a class="links-image a4 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=vitaminas"><img src="../../images/noun_vitamins_3569352.svg" alt="imgProducto" width="60" height="50">VITAMINAS</a>
+                <a class="links-image a1 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=Sodas&icon=../../images/noun_soda_3320346.svg"><img src="../../images/noun_soda_3320346.svg" alt="imgProducto" width="60" height="50">SODAS</a>
+                <a class="links-image a2 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=Jugos&icon=../../images/noun_juice_3365295.svg"><img src="../../images/noun_juice_3365295.svg" alt="imgProducto" width="60" height="50">JUGOS</a>
+                <a class="links-image a3 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=Agua&icon=../../images/noun_Water Bottle_3414064.svg"><img src="../../images/noun_Water Bottle_3414064.svg" alt="imgProducto" width="60" height="50">AGUAS</a>
+                <a class="links-image a4 dropdown-item" href="../../procesos/filtrarProductos.php?categoria=Vitaminas&icon=../../images/noun_vitamins_3569352.svg"><img src="../../images/noun_vitamins_3569352.svg" alt="imgProducto" width="60" height="50">VITAMINAS</a>
             </div>
         </div>
     </div>

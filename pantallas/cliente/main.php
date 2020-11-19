@@ -72,11 +72,9 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         </div>
     </div>
     <!-- Footer -->
-    <footer class="page-footer font-small teal pt-4">
-        <div class="footer-copyright text-center py-3">© 2020 SuperInstant1
-        </div>
-    </footer>
-    <!-- Footer -->
+    <?php require('footer.php'); ?>
+
+    <!-- MODAL -->
     <div class="custom-modal" id="custom-modal">
         <div class="modal-box">
             <div class="img-success">
@@ -94,6 +92,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
 </body>
 
 </html>
+<script src="../../js/globalFunctions.js"></script>
 <script>
     //CANTIDAD DE COMPRAS
     let carritoProducts = window.localStorage.getItem('carrito');
@@ -241,79 +240,4 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         }
     }
 
-    //AGREGAR AL CARRITO
-    const agregarCarrito = (id) => {
-        let noButton = document.getElementsByClassName('ok-button');
-        let modal = document.getElementById('custom-modal');
-        let msg = document.getElementById('modal-msg');
-
-
-        noButton[0].style.display = 'inline-block';
-        noButton[0].innerHTML = 'OK';
-
-        noButton[1].style.display = 'none';
-
-
-        if (carritoProducts == null || carritoProducts == undefined || carritoProducts == "") {
-            carritoProducts = [];
-            carritoProducts.push(id);
-            window.localStorage.setItem('carrito', JSON.stringify(carritoProducts));
-            compras[0].innerHTML = 1;
-            msg.innerHTML = 'El producto fue agregado al carrito.'
-        } else {
-            let duplicate = false;
-            carritoProducts = JSON.parse(window.localStorage.getItem('carrito'));
-            for (let i = 0; i < carritoProducts.length; i++) {
-                if (id == carritoProducts[i]) {
-                    duplicate = true;
-                    break;
-                }
-            }
-            if (duplicate) {
-                document.getElementById('msg-icon').src = "https://img.icons8.com/officel/100/000000/high-risk.png";
-                msg.innerHTML = 'Ya el producto está agregado en el carrito.'
-            } else {
-                document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/100/000000/checkmark.png";
-                carritoProducts.push(id);
-                window.localStorage.setItem('carrito', JSON.stringify(carritoProducts));
-                compras[0].innerHTML = carritoProducts.length;
-                msg.innerHTML = 'El producto fue agregado al carrito.'
-
-            }
-        }
-
-        modal.style.display = 'block';
-    }
-
-
-    //CAMBIAR DE SUCURSAL
-    const confirmDelete = () => {
-
-        if (carritoProducts.length > 0) {
-            let modal = document.getElementById('custom-modal');
-            let msg = document.getElementById('modal-msg');
-            let icon = document.getElementById('msg-icon');
-            let noButton = document.getElementsByClassName('ok-button');
-
-            msg.innerHTML = 'Sus productos agregados serán borrados, desea continuar?'
-            icon.src = "https://img.icons8.com/officel/100/000000/high-risk.png"
-
-            noButton[0].style.display = 'inline-block';
-            noButton[0].innerHTML = 'NO';
-
-            noButton[1].style.display = 'inline-block';
-            noButton[1].innerHTML = 'SI';
-
-            modal.style.display = 'block';
-        } else {
-            location.href = '../../procesos/reselectSucursal.php';
-        }
-    }
-
-
-    //CERRAR MODAL
-    const closeModal = () => {
-        let modal = document.getElementById('custom-modal');
-        modal.style.display = "none";
-    }
 </script>
