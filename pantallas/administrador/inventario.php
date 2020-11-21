@@ -28,9 +28,9 @@ $suministros = $obj->GetSuministros();
 
 <body>
     <div class="dashboard-container">
-        <?php require 'dashboard-nav.php' ?>
+        <?php require 'dashboard-nav.html' ?>
         <div class="dashboard-content">
-            <?php require 'dashboard-header.php' ?>
+            <?php require 'dashboard-header.html' ?>
             <div class="dashboard-body">
                 <div class="user-title">
                     <h1>Bienvenido, <?= $nombre ?></h1>
@@ -82,6 +82,7 @@ $suministros = $obj->GetSuministros();
 <script src="../../js/chart_v2.9.4.js"></script>
 <script src="../../js/globalFunctions.js"></script>
 <script>
+    document.getElementsByClassName('cant-notifications')[0].innerHTML = <?= count($notificaciones) ?>;
     //SELECCIONADO EN EL NAVBAR LA PANTALLA CORRESPONDIENTE
     let links = document.getElementsByClassName('list-links');
 
@@ -116,7 +117,7 @@ $suministros = $obj->GetSuministros();
 
 
     //INICIALIZAR GRÁFICA
-    let chart = createChart(inventariosChart, 0, 0, 'Inventario de las Sucursales','Cajas en Stock', 'Productos', 'Cajas');
+    let chart = createChart(inventariosChart, 0, 0, 'Inventario de las Sucursales', 'Cajas en Stock', 'Productos', 'Cajas');
 
     //LLENAR LOS SELECTS
     for (const item of sucursales) {
@@ -153,45 +154,45 @@ $suministros = $obj->GetSuministros();
         uniqueTamanos = [];
 
         tamanosSelect.innerText = '';
-            for (const item of suministros) {
-                if (item.id_categoria == value) {
-                    if (uniqueProducts.indexOf(item.producto) < 0) {
-                        uniqueProducts.push(item.producto);
-                        let productsObject = {
-                            producto: item.producto,
-                            productoID: item.id_producto
-                        }
-                        productos.push(productsObject);
+        for (const item of suministros) {
+            if (item.id_categoria == value) {
+                if (uniqueProducts.indexOf(item.producto) < 0) {
+                    uniqueProducts.push(item.producto);
+                    let productsObject = {
+                        producto: item.producto,
+                        productoID: item.id_producto
                     }
+                    productos.push(productsObject);
+                }
 
-                    if (uniqueTamanos.indexOf(item.tamano) < 0) {
-                        uniqueTamanos.push(item.tamano);
-                        let tamanosObject = {
-                            tamano: item.tamano,
-                            tamanoID: item.id_tamano
-                        }
-                        tamanos.push(tamanosObject);
+                if (uniqueTamanos.indexOf(item.tamano) < 0) {
+                    uniqueTamanos.push(item.tamano);
+                    let tamanosObject = {
+                        tamano: item.tamano,
+                        tamanoID: item.id_tamano
                     }
+                    tamanos.push(tamanosObject);
                 }
             }
+        }
 
-            if (text != 'Agua Embotellada') {
-                isAgua = false;
-                tamanosSelect.disabled = false;
+        if (text != 'Agua Embotellada') {
+            isAgua = false;
+            tamanosSelect.disabled = false;
 
-                //LLENAR SELECTS
-                for (let i = 0; i < tamanos.length; i++) {
-                    let option = document.createElement('option');
-                    option.text = tamanos[i].tamano;
-                    option.value = tamanos[i].tamanoID;
-                    tamanosSelect.appendChild(option);
-                }
-            } else {
-                tamanosSelect.disabled = true;
-                isAgua = true;
+            //LLENAR SELECTS
+            for (let i = 0; i < tamanos.length; i++) {
+                let option = document.createElement('option');
+                option.text = tamanos[i].tamano;
+                option.value = tamanos[i].tamanoID;
+                tamanosSelect.appendChild(option);
             }
-        
-            validateType();
+        } else {
+            tamanosSelect.disabled = true;
+            isAgua = true;
+        }
+
+        validateType();
     }
 
 
@@ -201,12 +202,12 @@ $suministros = $obj->GetSuministros();
         sucursalSelect.disabled = true;
         let suministrosName = [];
         let cantidades = [];
-  
+
         if (isAgua) {
             for (const item of tamanos) {
                 suministrosName.push(item.tamano);
             }
-    
+
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
                     let cantidad = 0;
@@ -299,7 +300,7 @@ $suministros = $obj->GetSuministros();
     }
 
     const validateType = () => {
-        if (sucursalSelect.disabled == true){
+        if (sucursalSelect.disabled == true) {
             showGeneral();
         } else {
             showSucursal();

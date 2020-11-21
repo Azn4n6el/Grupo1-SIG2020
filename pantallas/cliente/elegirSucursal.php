@@ -4,8 +4,10 @@ session_start();
 if (isset($_SESSION['sessionSucursal'])){
     header('Location: main.php');
 }
+
 $obj = new Conexion();
 $sucursales = $obj->GetAllSucursales();
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -19,7 +21,7 @@ $sucursales = $obj->GetAllSucursales();
 </head>
 
 <body>
-    <?php require('header.php'); ?>
+    <?php require('head.html'); ?>
     <div class="sucursal-body">
         <div class="image-container">
             <img src="../../images/cajero.png" alt="cashier" width="900">

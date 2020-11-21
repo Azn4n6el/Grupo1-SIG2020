@@ -43,7 +43,7 @@ for ($i = 0; $i < count($categoriaProducts); $i++) {
 </head>
 
 <body>
-    <?php require('header.php'); ?>
+    <?php require('head.html'); ?>
     <div class="main-container">
         <nav class="categoria-container">
             <div class="categoria-icon">
@@ -91,29 +91,17 @@ for ($i = 0; $i < count($categoriaProducts); $i++) {
         </section>
     </div>
     <!-- Footer -->
-    <?php require('footer.php'); ?>
+    <?php require('footer.html'); ?>
 
 </body>
 
-
-<div class="custom-modal" id="custom-modal">
-    <div class="modal-box">
-        <div class="img-success">
-            <img src="https://img.icons8.com/flat_round/100/000000/checkmark.png" id="msg-icon" />
-        </div>
-        <div class="modal-message">
-            <h2 id="modal-msg">¡Reabastecido Satisfactoriamente!</h2>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="ok-button" onclick="closeModal()">OK</button>
-            <button type="button" class="no-button ok-button" onclick="location.href='../../procesos/reselectSucursal.php'">SI</button>
-        </div>
-    </div>
-</div>
+<!-- MODAL -->
+<?php require('custom-modal.html') ?>
 
 </html>
 <script src="../../js/globalFunctions.js"></script>
 <script>
+    //CANTIDAD DE PRODUCTOS EN EL CARRITO
     let carritoProducts = window.localStorage.getItem('carrito');
     let compras = document.getElementsByClassName('cant-compras');
     if (carritoProducts != null && carritoProducts != undefined && carritoProducts != "") {
@@ -124,8 +112,9 @@ for ($i = 0; $i < count($categoriaProducts); $i++) {
     }
 
     let categoriaProducts = <?= json_encode($categoriaProducts) ?>;
-    console.log(categoriaProducts);
 
+
+    //BUSCAR PRODUCTOS
     const searchProduct = (value, type) => {
         let container = document.getElementsByClassName('products-container');
         container[0].innerHTML = '';
