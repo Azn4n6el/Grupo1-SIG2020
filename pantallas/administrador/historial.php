@@ -23,9 +23,9 @@ $historial = $obj->GetHistorial($ruc_centro);
 
 <body>
     <div class="dashboard-container">
-        <?php require 'dashboard-nav.php' ?>
+        <?php require 'dashboard-nav.html' ?>
         <div class="dashboard-content">
-            <?php require 'dashboard-header.php' ?>
+            <?php require 'dashboard-header.html' ?>
             <div class="dashboard-body">
                 <div class="body-title">
                     <h1>Historial de Compras</h1>
@@ -46,7 +46,7 @@ $historial = $obj->GetHistorial($ruc_centro);
                             </thead>
                             <tbody>
                                 <?php for ($i = 0; $i < count($historial); $i++) : ?>
-                                    <tr>                                
+                                    <tr>
                                         <td><?= $historial[$i]['sucursal'] ?></td>
                                         <td><?= $historial[$i]['categoria'] ?></td>
                                         <td><?= $historial[$i]['producto'] ?></td>
@@ -73,6 +73,7 @@ $historial = $obj->GetHistorial($ruc_centro);
 
 </html>
 <script>
+    document.getElementsByClassName('cant-notifications')[0].innerHTML = <?= count($notificaciones) ?>;
     let links = document.getElementsByClassName('list-links');
     links[3].style.cssText = 'background-color:var(--form-color); transform:scale(1.1);'
 </script>

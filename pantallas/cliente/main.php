@@ -4,6 +4,7 @@ session_start();
 if (!isset($_SESSION['sessionSucursal'])) {
     header('Location: elegirSucursal.php');
 }
+
 $ruc_sucursal = $_SESSION['sessionSucursal'];
 $obj = new Conexion();
 $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
@@ -22,7 +23,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
 
 <body>
     <!-- HEADER -->
-    <?php require('header.php'); ?>
+    <?php require('head.html'); ?>
     <div class="main-container">
         <div class="sucursal-title">
             Sucursal <?= $suministros[0]['direccion'] ?>
@@ -72,24 +73,12 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         </div>
     </div>
     <!-- Footer -->
-    <?php require('footer.php'); ?>
+    <?php require('footer.html'); ?>
 
-    <!-- MODAL -->
-    <div class="custom-modal" id="custom-modal">
-        <div class="modal-box">
-            <div class="img-success">
-                <img src="https://img.icons8.com/flat_round/100/000000/checkmark.png" id="msg-icon" />
-            </div>
-            <div class="modal-message">
-                <h2 id="modal-msg">¡Reabastecido Satisfactoriamente!</h2>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="ok-button" onclick="closeModal()">OK</button>
-                <button type="button" class="no-button ok-button" onclick="location.href='../../procesos/reselectSucursal.php'">SI</button>
-            </div>
-        </div>
-    </div>
 </body>
+
+<!-- MODAL -->
+<?php require('custom-modal.html') ?>
 
 </html>
 <script src="../../js/globalFunctions.js"></script>
@@ -239,5 +228,4 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
             pointer2 += 5;
         }
     }
-
 </script>

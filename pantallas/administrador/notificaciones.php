@@ -24,9 +24,9 @@ $notificaciones = $obj->GetNotificaciones($ruc_centro);
 
 <body>
     <div class="dashboard-container">
-        <?php require 'dashboard-nav.php' ?>
+        <?php require 'dashboard-nav.html' ?>
         <div class="dashboard-content">
-            <?php require 'dashboard-header.php' ?>
+            <?php require 'dashboard-header.html' ?>
             <div class="dashboard-body">
                 <div class="body-title">
                     <h1>Notificaciones</h1>
@@ -74,6 +74,7 @@ $notificaciones = $obj->GetNotificaciones($ruc_centro);
 
 </html>
 <script>
+    document.getElementsByClassName('cant-notifications')[0].innerHTML = <?= count($notificaciones) ?>;
     /* NAV NINGUNO SELECCIONADO */
     let links = document.getElementsByClassName('list-links');
     for (const item of links) {

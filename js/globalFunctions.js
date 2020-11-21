@@ -106,7 +106,6 @@ const agregarCarrito = (id) => {
     let modal = document.getElementById('custom-modal');
     let msg = document.getElementById('modal-msg');
 
-
     noButton[0].style.display = 'inline-block';
     noButton[0].innerHTML = 'OK';
 
