@@ -100,7 +100,6 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
 </html>
 <script src="../../js/globalFunctions.js"></script>
 <script>
-
     let ruc_sucursal = <?= $ruc_sucursal ?>;
     //CANTIDAD DE PRODUCTOS EN EL HEADER
     let carritoProducts = window.localStorage.getItem('carrito');
@@ -110,6 +109,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         compras[0].innerHTML = carritoProducts.length;
     } else {
         carritoProducts = [];
+        document.getElementsByClassName('carrito-body')[0].innerHTML = '<h2>No tiene productos agregados por el momento </h2>';
     }
 
     let suministros = <?= json_encode($suministros) ?>;
@@ -131,7 +131,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         for (let i = 0; i < productsDetails.length; i++) {
             container.insertAdjacentHTML('beforeend', `<div class="product-details-container" id="product-${productsDetails[i].id_suministro}">
                         <div class="c-img-details">
-                        <img class="c-product-image" src="https://d13lnhwm7sh4hi.cloudfront.net/wp-content/uploads/2020/03/20143131/4946406_coke-cola-origina-lata-12-oz-355-ml-011.jpg" alt="producto-imagen" width="150" height="150">
+                        <img class="c-product-image" src="${productsDetails[i].imagen}" alt="producto-imagen" width="150" height="150">
                             <div class="product-details">
                                 <div class="c-proudct-stock">
                                    Stock: ${productsDetails[i].cantidad}
@@ -198,14 +198,21 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
     const deleteProduct = (id) => {
         let product = document.getElementById('product-' + id);
 
-        product.remove();
+        product.classList.add('delete-product-anim');
+        setTimeout(() => {
+            product.remove();
+            let index = carritoProducts.indexOf(id);
+            carritoProducts.splice(index, 1);
+            compras[0].innerHTML = carritoProducts.length;
+            window.localStorage.setItem('carrito', JSON.stringify(carritoProducts));
+            calculateTotals();
+            if (carritoProducts.length < 1) {
+                window.localStorage.removeItem('carrito');
+                document.getElementsByClassName('carrito-body')[0].innerHTML = '<h2>No tiene productos agregados por el momento </h2>';
+            }
+        }, 1000)
 
-        let index = carritoProducts.indexOf(id);
-        carritoProducts.splice(index, 1);
-        compras[0].innerHTML = carritoProducts.length;
-        window.localStorage.setItem('carrito', JSON.stringify(carritoProducts));
 
-        calculateTotals();
 
     }
 
@@ -242,20 +249,17 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         let totalMonto = document.getElementById('total');
 
         let compras = [];
-        for (let i = 0; i < cantidades.length; i++){
+        for (let i = 0; i < cantidades.length; i++) {
             let compra = {
-                id_factura: 0,
                 id_suministro: parseInt(carritoProducts[i]),
-                cedula: '',
                 ruc_sucursal: ruc_sucursal,
-                forma_pago:'',
                 cantidad: parseInt(cantidades[i].value)
             }
             compras.push(compra);
         }
 
         window.localStorage.setItem('compra', JSON.stringify(compras));
-        location.href="checkout.php";
+        location.href = "checkout.php";
     }
 
     calculateTotals();

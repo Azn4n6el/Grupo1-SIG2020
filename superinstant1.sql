@@ -22,26 +22,24 @@ CREATE PROCEDURE `add_clientes`(
 	IN `cedula2` VARCHAR(50),
 	IN `nombre2` VARCHAR(50),
 	IN `telefono2` INT,
-	IN `tarjeta2` INT,
-	IN `calle2` VARCHAR(50),
-	IN `lote2` INT,
-	IN `barriada2` VARCHAR(50)
+	IN `tarjeta2` VARCHAR(50),
+	IN `direccion2` VARCHAR(50)
 )
 BEGIN
-	INSERT INTO clientes(cedula, nombre, telefono, n_tarjeta, calle, lote, barriada)
-	VALUES(cedula2, nombre2, telefono2, tarjeta2, calle2, lote2, barriada2);
+	INSERT INTO clientes(cédula, nombre, telefono, n_tarjeta, direccion)
+	VALUES(cedula2, nombre2, telefono2, tarjeta2, direccion2);
 END//
 DELIMITER ;
 
 -- Dumping structure for procedure superinstant1.add_compra
 DELIMITER //
 CREATE PROCEDURE `add_compra`(
+	IN `id_factura2` INT,
 	IN `cedula` VARCHAR(50),
 	IN `suministro` INT,
 	IN `sucursal` INT,
 	IN `pago` VARCHAR(50),
-	IN `cantidad2` INT,
-	IN `total2` DECIMAL(10,2)
+	IN `cantidad2` INT
 )
 BEGIN
 DECLARE restante, demanda, reorden, centro INT;
@@ -52,8 +50,8 @@ WHERE id_suministro = suministro AND ruc_sucursal = sucursal INTO restante;
 /* VERIFICAR SI HAY SUFICIENTES PRODUCTOS*/
 IF (restante >= cantidad2) THEN
 	/*INSERTANDO LA COMPRA*/
-	INSERT INTO compra (cédula, id_suministro, ruc_sucursal, forma_pago, cantidad, total)
-	VALUES(cedula, suministro, sucursal, pago, cantidad2, total2);
+	INSERT INTO compra (id_factura, cédula, id_suministro, ruc_sucursal, forma_pago, cantidad)
+	VALUES(id_factura2, cedula, suministro, sucursal, pago, cantidad2);
 	
 	/*ACTUALIZAR EL PRODUCTO COMPRADO*/
 	UPDATE contiene
@@ -65,8 +63,8 @@ IF (restante >= cantidad2) THEN
 	WHERE id_suministro = suministro AND ruc_sucursal = sucursal INTO restante;
 	
 	/* SUMA LAS VENTAS EN LOS ULTIMOS 30 DIAS*/
-	SELECT SUM(cantidad) FROM compra WHERE FECHA BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() INTO demanda; 
-	SET reorden =  demanda/30 * 5;
+	SELECT AVG(cantidad) FROM compra WHERE FECHA BETWEEN DATE_SUB(NOW(), INTERVAL 30 DAY) AND NOW() AND id_suministro = suministro AND ruc_sucursal = sucursal INTO demanda; 
+	SET reorden =  demanda * 5;
 	
 	/*VERIFICA SI ESTA POR DEBAJO DEL PUNTO DE REORDEN*/
 	IF (reorden >= restante) THEN
@@ -165,29 +163,32 @@ CREATE TABLE IF NOT EXISTS `clientes` (
   `cédula` varchar(20) NOT NULL,
   `nombre` varchar(50) DEFAULT NULL,
   `telefono` int(11) DEFAULT NULL,
-  `n_tarjeta` int(11) DEFAULT NULL,
-  `calle` varchar(50) DEFAULT NULL,
-  `lote` int(11) DEFAULT NULL,
-  `barriada` varchar(50) DEFAULT NULL,
+  `n_tarjeta` varchar(50) DEFAULT NULL,
+  `direccion` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`cédula`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table superinstant1.clientes: ~0 rows (approximately)
+-- Dumping data for table superinstant1.clientes: ~7 rows (approximately)
 /*!40000 ALTER TABLE `clientes` DISABLE KEYS */;
-INSERT INTO `clientes` (`cédula`, `nombre`, `telefono`, `n_tarjeta`, `calle`, `lote`, `barriada`) VALUES
-	('1111111', 'test', 6123456, 123456789, '13', 24, 'Llanos');
+INSERT INTO `clientes` (`cédula`, `nombre`, `telefono`, `n_tarjeta`, `direccion`) VALUES
+	('1111111', 'test', 6123456, '123456789', NULL),
+	('12345678', 'Test Test', 12345678, '9c1185a5c5e9fc54612808977ee8f548b2258d31', 'Panama'),
+	('1323', '131', 23, '9c1185a5c5e9fc54612808977ee8f548b2258d31', '3213'),
+	('342325323', '23234234', 3424324, '9c1185a5c5e9fc54612808977ee8f548b2258d31', '234234'),
+	('4134', '31413', 4134, '9c1185a5c5e9fc54612808977ee8f548b2258d31', '1341343'),
+	('543534543', 'Angel', 1441, '9c1185a5c5e9fc54612808977ee8f548b2258d31', '1414'),
+	('67567', '567567', 567567, '9c1185a5c5e9fc54612808977ee8f548b2258d31', '567567');
 /*!40000 ALTER TABLE `clientes` ENABLE KEYS */;
 
 -- Dumping structure for table superinstant1.compra
 CREATE TABLE IF NOT EXISTS `compra` (
-  `id_factura` int(11) NOT NULL AUTO_INCREMENT,
+  `id_factura` int(11) NOT NULL,
   `cédula` varchar(20) NOT NULL,
   `id_suministro` int(11) NOT NULL,
   `ruc_sucursal` int(11) NOT NULL,
   `forma_pago` varchar(50) NOT NULL DEFAULT '',
   `cantidad` int(11) NOT NULL,
   `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `total` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`id_factura`,`cédula`,`id_suministro`,`ruc_sucursal`),
   KEY `FK_compra_cédula` (`cédula`),
   KEY `FK_compra_id_suministro` (`id_suministro`),
@@ -195,17 +196,27 @@ CREATE TABLE IF NOT EXISTS `compra` (
   CONSTRAINT `FK_compra_cédula` FOREIGN KEY (`cédula`) REFERENCES `clientes` (`cédula`),
   CONSTRAINT `FK_compra_id_suministro` FOREIGN KEY (`id_suministro`) REFERENCES `suministros` (`id_suministro`),
   CONSTRAINT `FK_compra_ruc_sucursales` FOREIGN KEY (`ruc_sucursal`) REFERENCES `sucursales` (`ruc_sucursal`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table superinstant1.compra: ~5 rows (approximately)
+-- Dumping data for table superinstant1.compra: ~16 rows (approximately)
 /*!40000 ALTER TABLE `compra` DISABLE KEYS */;
-INSERT INTO `compra` (`id_factura`, `cédula`, `id_suministro`, `ruc_sucursal`, `forma_pago`, `cantidad`, `fecha`, `total`) VALUES
-	(2, '1111111', 1, 111, 'cr', 20, '2020-11-06 21:59:28', NULL),
-	(3, '1111111', 1, 111, 'CR', 20, '2020-11-06 22:14:49', NULL),
-	(4, '1111111', 1, 111, 'cr', 20, '2020-11-06 22:19:03', NULL),
-	(5, '1111111', 1, 111, 'CR', 20, '2020-11-06 22:22:51', NULL),
-	(7, '1111111', 1, 111, 'CR', 250, '2020-11-06 22:49:24', NULL),
-	(8, '1111111', 1, 111, 'CR', 200, '2020-11-06 22:51:04', NULL);
+INSERT INTO `compra` (`id_factura`, `cédula`, `id_suministro`, `ruc_sucursal`, `forma_pago`, `cantidad`, `fecha`) VALUES
+	(2, '1111111', 1, 111, 'cr', 20, '2020-11-06 21:59:28'),
+	(2, '1111111', 2, 111, 'cr', 60, '2020-11-18 19:01:20'),
+	(3, '1111111', 1, 111, 'CR', 20, '2020-11-06 22:14:49'),
+	(4, '1111111', 1, 111, 'cr', 20, '2020-11-06 22:19:03'),
+	(5, '1111111', 1, 111, 'CR', 20, '2020-11-06 22:22:51'),
+	(7, '1111111', 1, 111, 'CR', 250, '2020-11-06 22:49:24'),
+	(8, '1111111', 1, 111, 'CR', 200, '2020-11-06 22:51:04'),
+	(9, '1323', 3, 111, 'on', 1, '2020-11-21 13:58:28'),
+	(9, '1323', 20, 111, 'on', 1, '2020-11-21 13:58:28'),
+	(10, '12345678', 3, 111, 'Efectivo', 1, '2020-11-21 14:00:16'),
+	(10, '12345678', 20, 111, 'Efectivo', 1, '2020-11-21 14:00:16'),
+	(11, '342325323', 3, 111, 'Efectivo', 1, '2020-11-21 14:01:36'),
+	(11, '342325323', 20, 111, 'Efectivo', 1, '2020-11-21 14:01:36'),
+	(12, '543534543', 3, 111, 'Efectivo', 5, '2020-11-21 14:06:17'),
+	(13, '67567', 3, 111, 'Efectivo', 2, '2020-11-21 14:08:23'),
+	(14, '4134', 3, 111, 'Efectivo', 80, '2020-11-21 14:08:44');
 /*!40000 ALTER TABLE `compra` ENABLE KEYS */;
 
 -- Dumping structure for table superinstant1.contiene
@@ -223,12 +234,12 @@ CREATE TABLE IF NOT EXISTS `contiene` (
 -- Dumping data for table superinstant1.contiene: ~81 rows (approximately)
 /*!40000 ALTER TABLE `contiene` DISABLE KEYS */;
 INSERT INTO `contiene` (`id_suministro`, `ruc_sucursal`, `cantidad`, `precio`) VALUES
-	(1, 111, 60, 19.20),
-	(1, 112, 50, 12.58),
+	(1, 111, 224, 19.20),
+	(1, 112, 73, 12.58),
 	(2, 111, 250, 22.50),
-	(3, 111, 100, 24.50),
+	(3, 111, 10, 24.50),
 	(4, 111, 150, 29.50),
-	(5, 111, 50, 19.50),
+	(5, 111, 62, 19.50),
 	(5, 112, 100, 15.00),
 	(9, 111, 25, 19.70),
 	(10, 111, 65, 22.80),
@@ -238,7 +249,7 @@ INSERT INTO `contiene` (`id_suministro`, `ruc_sucursal`, `cantidad`, `precio`) V
 	(17, 111, 230, 20.50),
 	(18, 111, 140, 23.80),
 	(19, 111, 125, 26.60),
-	(20, 111, 56, 28.99),
+	(20, 111, 53, 28.99),
 	(21, 111, 79, 20.50),
 	(22, 111, 140, 23.80),
 	(23, 111, 235, 26.60),
@@ -259,6 +270,7 @@ INSERT INTO `contiene` (`id_suministro`, `ruc_sucursal`, `cantidad`, `precio`) V
 	(42, 111, 250, 34.50),
 	(43, 111, 140, 45.00),
 	(44, 111, 370, 56.00),
+	(44, 112, 20, 54.40),
 	(45, 111, 99, 29.99),
 	(46, 111, 170, 34.50),
 	(46, 112, 100, 20.00),
@@ -314,6 +326,29 @@ CREATE PROCEDURE `delete_notificaByID`(
 BEGIN
 	DELETE FROM notifica
 	WHERE id_notifica = notifica_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure superinstant1.get_allSucursales
+DELIMITER //
+CREATE PROCEDURE `get_allSucursales`()
+BEGIN
+	SELECT *
+	FROM sucursales;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure superinstant1.get_factura
+DELIMITER //
+CREATE PROCEDURE `get_factura`()
+BEGIN
+	SELECT *
+	FROM
+	compra
+	ORDER BY id_factura DESC
+		LIMIT 1;
+	
+
 END//
 DELIMITER ;
 
@@ -377,6 +412,7 @@ su.direccion,
 p.descripcion AS producto,
 cat.descripcion AS categoria,
 t.descripcion AS tamaño,
+s.imagen AS imagen,
 c.cantidad,
 c.precio
 FROM contiene c JOIN suministros s ON c.id_suministro = s.id_suministro
@@ -493,12 +529,19 @@ CREATE TABLE IF NOT EXISTS `notifica` (
   CONSTRAINT `FK_notifica_id_suministro` FOREIGN KEY (`id_suministro`) REFERENCES `suministros` (`id_suministro`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_notifica_ruc_centro` FOREIGN KEY (`ruc_centro`) REFERENCES `centros` (`ruc_centro`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_notifica_ruc_sucursale` FOREIGN KEY (`ruc_sucursal`) REFERENCES `sucursales` (`ruc_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table superinstant1.notifica: ~1 rows (approximately)
+-- Dumping data for table superinstant1.notifica: ~8 rows (approximately)
 /*!40000 ALTER TABLE `notifica` DISABLE KEYS */;
 INSERT INTO `notifica` (`id_notifica`, `id_suministro`, `ruc_sucursal`, `ruc_centro`, `cantidad`, `fecha`) VALUES
-	(13, 1, 111, 123, 144, '2020-11-14 17:41:49');
+	(15, 3, 111, 123, 99, '2020-11-21 13:58:28'),
+	(16, 20, 111, 123, 99, '2020-11-21 13:58:28'),
+	(17, 3, 111, 123, 99, '2020-11-21 14:00:16'),
+	(18, 20, 111, 123, 99, '2020-11-21 14:00:16'),
+	(19, 3, 111, 123, 99, '2020-11-21 14:01:36'),
+	(20, 20, 111, 123, 99, '2020-11-21 14:01:36'),
+	(21, 3, 111, 123, 100, '2020-11-21 14:06:17'),
+	(22, 3, 111, 123, 15, '2020-11-21 14:08:44');
 /*!40000 ALTER TABLE `notifica` ENABLE KEYS */;
 
 -- Dumping structure for table superinstant1.productos
@@ -549,7 +592,7 @@ CREATE TABLE IF NOT EXISTS `reabastece` (
   CONSTRAINT `FK_reabastece_id_suministro` FOREIGN KEY (`id_suministro`) REFERENCES `suministros` (`id_suministro`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_reabastece_ruc_centro` FOREIGN KEY (`Ruc_centro`) REFERENCES `centros` (`ruc_centro`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_reabastece_ruc_sucursal` FOREIGN KEY (`Ruc_sucursal`) REFERENCES `sucursales` (`ruc_sucursal`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4;
 
 -- Dumping data for table superinstant1.reabastece: ~17 rows (approximately)
 /*!40000 ALTER TABLE `reabastece` DISABLE KEYS */;
@@ -570,7 +613,12 @@ INSERT INTO `reabastece` (`id_factura`, `id_suministro`, `Ruc_sucursal`, `Ruc_ce
 	(14, 61, 112, 123, 20.00, 100, '2020-11-16 11:01:16'),
 	(15, 65, 112, 123, 20.00, 100, '2020-11-16 11:03:39'),
 	(16, 69, 112, 123, 20.00, 100, '2020-11-16 11:04:08'),
-	(17, 5, 112, 123, 10.00, 100, '2020-11-16 12:58:41');
+	(17, 5, 112, 123, 10.00, 100, '2020-11-16 12:58:41'),
+	(18, 1, 111, 123, 0.43, 144, '2020-11-17 22:16:04'),
+	(19, 1, 111, 123, 20.00, 20, '2020-11-20 21:11:41'),
+	(20, 44, 112, 123, 34.00, 20, '2020-11-20 21:12:10'),
+	(21, 5, 111, 123, 12.00, 12, '2020-11-21 08:44:21'),
+	(22, 1, 112, 123, 23.00, 23, '2020-11-21 08:50:10');
 /*!40000 ALTER TABLE `reabastece` ENABLE KEYS */;
 
 -- Dumping structure for table superinstant1.sucursales
@@ -586,7 +634,7 @@ CREATE TABLE IF NOT EXISTS `sucursales` (
   CONSTRAINT `FK_sucursales_centros` FOREIGN KEY (`ruc_centro`) REFERENCES `centros` (`ruc_centro`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Dumping data for table superinstant1.sucursales: ~2 rows (approximately)
+-- Dumping data for table superinstant1.sucursales: ~1 rows (approximately)
 /*!40000 ALTER TABLE `sucursales` DISABLE KEYS */;
 INSERT INTO `sucursales` (`ruc_sucursal`, `ruc_centro`, `nombre`, `correo`, `telefono`, `direccion`) VALUES
 	(111, 123, 'XTRA', 'sucursal@test.com', 12345678, 'Condado'),
@@ -599,6 +647,7 @@ CREATE TABLE IF NOT EXISTS `suministros` (
   `id_producto` int(11) NOT NULL,
   `id_categoria` int(11) NOT NULL,
   `id_tamano` int(11) NOT NULL,
+  `imagen` varchar(1000) DEFAULT NULL,
   `fecha_agregado` timestamp NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id_suministro`),
   KEY `FK_suministros_id_categoria` (`id_categoria`),
@@ -611,80 +660,80 @@ CREATE TABLE IF NOT EXISTS `suministros` (
 
 -- Dumping data for table superinstant1.suministros: ~73 rows (approximately)
 /*!40000 ALTER TABLE `suministros` DISABLE KEYS */;
-INSERT INTO `suministros` (`id_suministro`, `id_producto`, `id_categoria`, `id_tamano`, `fecha_agregado`) VALUES
-	(1, 1, 1, 1, '2020-11-06 15:36:49'),
-	(2, 1, 1, 2, '2020-11-06 15:37:23'),
-	(3, 1, 1, 3, '2020-11-06 15:37:44'),
-	(4, 1, 1, 4, '2020-11-06 15:37:56'),
-	(5, 2, 1, 1, '2020-11-06 15:39:30'),
-	(9, 3, 1, 1, '2020-11-06 15:43:40'),
-	(10, 3, 1, 2, '2020-11-06 15:43:46'),
-	(11, 3, 1, 3, '2020-11-06 15:44:03'),
-	(12, 3, 1, 4, '2020-11-06 15:44:08'),
-	(13, 4, 1, 1, '2020-11-06 15:44:21'),
-	(17, 5, 1, 1, '2020-11-06 15:44:50'),
-	(18, 5, 1, 2, '2020-11-06 15:44:54'),
-	(19, 5, 1, 3, '2020-11-06 15:44:57'),
-	(20, 5, 1, 4, '2020-11-06 15:45:01'),
-	(21, 6, 1, 1, '2020-11-06 15:45:14'),
-	(22, 6, 1, 2, '2020-11-06 15:45:21'),
-	(23, 6, 1, 3, '2020-11-06 15:45:24'),
-	(24, 6, 1, 4, '2020-11-06 15:45:30'),
-	(25, 7, 1, 1, '2020-11-06 15:45:38'),
-	(27, 7, 1, 3, '2020-11-06 15:45:44'),
-	(29, 8, 1, 1, '2020-11-06 15:46:39'),
-	(31, 8, 1, 3, '2020-11-06 15:46:49'),
-	(32, 8, 1, 4, '2020-11-06 15:46:53'),
-	(33, 9, 2, 5, '2020-11-06 15:46:57'),
-	(36, 9, 2, 6, '2020-11-06 15:47:10'),
-	(37, 9, 2, 7, '2020-11-06 15:47:31'),
-	(38, 9, 2, 8, '2020-11-06 15:47:37'),
-	(39, 9, 2, 9, '2020-11-06 15:47:42'),
-	(40, 9, 2, 10, '2020-11-06 15:47:56'),
-	(41, 10, 3, 5, '2020-11-06 15:48:18'),
-	(42, 10, 3, 11, '2020-11-06 15:48:29'),
-	(43, 10, 3, 12, '2020-11-06 15:48:35'),
-	(44, 10, 3, 13, '2020-11-06 15:48:44'),
-	(45, 11, 3, 5, '2020-11-06 15:48:49'),
-	(46, 11, 3, 11, '2020-11-06 15:48:53'),
-	(47, 11, 3, 12, '2020-11-06 15:48:58'),
-	(48, 11, 3, 13, '2020-11-06 15:49:02'),
-	(49, 12, 3, 5, '2020-11-06 15:49:16'),
-	(50, 12, 3, 11, '2020-11-06 15:49:20'),
-	(51, 12, 3, 12, '2020-11-06 15:49:24'),
-	(52, 12, 3, 13, '2020-11-06 15:49:30'),
-	(53, 13, 3, 5, '2020-11-06 15:49:40'),
-	(54, 13, 3, 11, '2020-11-06 15:49:44'),
-	(55, 13, 3, 12, '2020-11-06 15:49:48'),
-	(56, 13, 3, 13, '2020-11-06 15:49:53'),
-	(57, 14, 3, 5, '2020-11-06 15:49:58'),
-	(58, 14, 3, 11, '2020-11-06 15:50:03'),
-	(59, 14, 3, 12, '2020-11-06 15:50:07'),
-	(60, 14, 3, 13, '2020-11-06 15:50:11'),
-	(61, 15, 4, 14, '2020-11-06 15:50:24'),
-	(62, 15, 4, 15, '2020-11-06 15:50:28'),
-	(63, 15, 4, 16, '2020-11-06 15:50:32'),
-	(64, 15, 4, 17, '2020-11-06 15:50:41'),
-	(65, 16, 4, 14, '2020-11-06 15:51:43'),
-	(66, 16, 4, 15, '2020-11-06 15:51:49'),
-	(67, 16, 4, 16, '2020-11-06 15:51:53'),
-	(68, 16, 4, 17, '2020-11-06 15:51:58'),
-	(69, 17, 4, 14, '2020-11-06 15:52:04'),
-	(70, 17, 4, 15, '2020-11-06 15:52:10'),
-	(71, 17, 4, 16, '2020-11-06 15:52:16'),
-	(72, 17, 4, 17, '2020-11-06 15:52:21'),
-	(73, 18, 4, 14, '2020-11-06 15:52:27'),
-	(74, 18, 4, 15, '2020-11-06 15:52:32'),
-	(75, 18, 4, 16, '2020-11-06 15:52:38'),
-	(76, 18, 4, 17, '2020-11-06 15:52:45'),
-	(77, 19, 4, 14, '2020-11-06 15:52:56'),
-	(78, 19, 4, 15, '2020-11-06 15:53:01'),
-	(79, 19, 4, 16, '2020-11-06 15:53:06'),
-	(80, 19, 4, 17, '2020-11-06 15:53:11'),
-	(81, 20, 4, 14, '2020-11-06 15:53:17'),
-	(82, 20, 4, 15, '2020-11-06 15:53:22'),
-	(83, 20, 4, 16, '2020-11-06 15:53:28'),
-	(84, 20, 4, 17, '2020-11-06 15:53:40');
+INSERT INTO `suministros` (`id_suministro`, `id_producto`, `id_categoria`, `id_tamano`, `imagen`, `fecha_agregado`) VALUES
+	(1, 1, 1, 1, 'https://www.lafruteria.cl/wp-content/uploads/2020/06/7801610220016-570x570.jpg', '2020-11-06 15:36:49'),
+	(2, 1, 1, 2, 'https://www.kcerito.com/wp-content/uploads/2020/06/COCA-COLA-450-ML.1.jpg', '2020-11-06 15:37:23'),
+	(3, 1, 1, 3, 'https://supermercado.carrefour.com.ar/media/catalog/product/cache/1/image/1000x/040ec09b1e35df139433887a97daa66f/7/7/7790895001413_01.jpg', '2020-11-06 15:37:44'),
+	(4, 1, 1, 4, 'https://d2j6dbq0eux0bg.cloudfront.net/images/31337833/1528367859.jpg', '2020-11-06 15:37:56'),
+	(5, 2, 1, 1, 'https://micocacola.vteximg.com.br/arquivos/ids/170494-292-292/7801610220122_1.jpg?v=637159333477130000', '2020-11-06 15:39:30'),
+	(9, 3, 1, 1, 'https://cdn.shopify.com/s/files/1/0289/4823/4288/products/KIST_FRESA_LATA_1X12_374a09b5-dccd-4abd-a51f-ef94b93f7fe9.jpg?v=1595566176', '2020-11-06 15:43:40'),
+	(10, 3, 1, 2, 'https://res.cloudinary.com/walmart-labs/image/upload/w_960,dpr_auto,f_auto,q_auto:best/gr/images/product-images/img_large/00750105530523L.jpg', '2020-11-06 15:43:46'),
+	(11, 3, 1, 3, 'https://titan.vtexassets.com/arquivos/ids/167285-800-auto?width=800&height=auto&aspect=true', '2020-11-06 15:44:03'),
+	(12, 3, 1, 4, 'https://titan.vtexassets.com/arquivos/ids/167284-800-auto?width=800&height=auto&aspect=true', '2020-11-06 15:44:08'),
+	(13, 4, 1, 1, 'https://cdn.grupoelcorteingles.es/SGFM/dctm/MEDIA03/201803/08/00113342801142____7__640x640.jpg', '2020-11-06 15:44:21'),
+	(17, 5, 1, 1, 'https://cdn2.golosinasysnacks.com/12128-large_default/fanta-pina-12-latas-de-355ml.jpg', '2020-11-06 15:44:50'),
+	(18, 5, 1, 2, 'https://www.superseis.com.py/images/thumbs/0214085.jpeg', '2020-11-06 15:44:54'),
+	(19, 5, 1, 3, 'https://titan.vtexassets.com/arquivos/ids/167286-800-auto?width=800&height=auto&aspect=true', '2020-11-06 15:44:57'),
+	(20, 5, 1, 4, 'https://images-na.ssl-images-amazon.com/images/I/71rbenFNzRL._SL1500_.jpg', '2020-11-06 15:45:01'),
+	(21, 6, 1, 1, 'https://www.orientalmarket.es/shop/13791-large_default/fanta-uva-350ml.jpg', '2020-11-06 15:45:14'),
+	(22, 6, 1, 2, 'https://www.chedraui.com.mx/medias/7501055327041-00-CH515Wx515H?context=bWFzdGVyfHJvb3R8NDA3OTd8aW1hZ2UvanBlZ3xoMjUvaGM2LzEwMTUwNjkwNzUwNDk0LmpwZ3xmYWIxMmYyMDYxMGI5ZjgxMjU1ZWUwMTIwYmMyMGZmOWRhOTcxOTczNzc4OTI5N2M1MzE3YjNiODczZTQwODMz', '2020-11-06 15:45:21'),
+	(23, 6, 1, 3, 'https://com-coca-cola-latamclientes-content-hero-prod-images.s3.amazonaws.com/products/hidratacion/ec/powerade-uva-sin-calorias_1l_2018.png', '2020-11-06 15:45:24'),
+	(24, 6, 1, 4, 'https://www.chedraui.com.mx/medias/7501055317462-00-CH515Wx515H?context=bWFzdGVyfHJvb3R8Mzk0MzB8aW1hZ2UvanBlZ3xoNGMvaDFlLzEwMjIzMjA0ODkyNzAyLmpwZ3wxN2ZkMmRlZDRjNzZlY2U1MDU0MjI2ZDExZmFkMDcyZjE3OWI3OTJiNDQ0MDJjNjgwNDQ2NjRiOWRhYjNiNjUz', '2020-11-06 15:45:30'),
+	(25, 7, 1, 1, 'https://mercadoselroble.com/esp/pics/prodcutos/7501441603117.jpg', '2020-11-06 15:45:38'),
+	(27, 7, 1, 3, 'https://www.casa-segal.com/wp-content/uploads/2020/03/fanta-naranja-15L-almacen-gaseosas-casa-segal-mendoza-600x600.jpg', '2020-11-06 15:45:44'),
+	(29, 8, 1, 1, 'https://www.lasirena.es/37368-large_default/fanta-limon.jpg', '2020-11-06 15:46:39'),
+	(31, 8, 1, 3, 'https://www.supertotus.com/assets/productos/fantalimon2l.jpg', '2020-11-06 15:46:49'),
+	(32, 8, 1, 4, 'https://supermercado.carrefour.com.ar/media/catalog/product/cache/1/image/1000x/040ec09b1e35df139433887a97daa66f/7/7/7790895007385_02.jpg', '2020-11-06 15:46:53'),
+	(33, 9, 2, 5, 'https://images-na.ssl-images-amazon.com/images/I/21fiZDcg5FL._QL70_ML2_.jpg', '2020-11-06 15:46:57'),
+	(36, 9, 2, 6, 'https://shoperia.encuentra24.com/63764-large_default/aqua-cristalina-12-onz-24x1.jpg', '2020-11-06 15:47:10'),
+	(37, 9, 2, 7, 'https://res.cloudinary.com/almacendo/image/upload/v1526570403/Agua/Agua-Dasani-_591ml_-Front.jpg', '2020-11-06 15:47:31'),
+	(38, 9, 2, 8, 'https://www.superama.com.mx/Content/images/products/img_large/0750108680113L.jpg', '2020-11-06 15:47:37'),
+	(39, 9, 2, 9, 'https://www.chedraui.com.mx/medias/7501055305681-00-CH1200Wx1200H?context=bWFzdGVyfHJvb3R8MjQyNzAyfGltYWdlL2pwZWd8aDVlL2g4Zi8xMDE1MDY1NjI0NTc5MC5qcGd8NmY0MDk0MmQ2OTYwZDA1ODkyMGY3YzI1NDQzMmMzYTEyMjFiODRhNTZlNmJkMGYxNzFkNmFlZGE0ZDMyNzc4MQ', '2020-11-06 15:47:42'),
+	(40, 9, 2, 10, 'https://http2.mlstatic.com/dispensador-agua-garrafon-recargable-usb-electrico-bomba-D_Q_NP_840470-MLM41916631551_052020-F.webp', '2020-11-06 15:47:56'),
+	(41, 10, 3, 5, 'https://cdn2.golosinasysnacks.com/12128-large_default/fanta-pina-12-latas-de-355ml.jpg', '2020-11-06 15:48:18'),
+	(42, 10, 3, 11, 'https://www.superseis.com.py/images/thumbs/0214085.jpeg', '2020-11-06 15:48:29'),
+	(43, 10, 3, 12, 'https://www.chedraui.com.mx/medias/7501055317455-00-CH1200Wx1200H?context=bWFzdGVyfHJvb3R8OTA3OTl8aW1hZ2UvanBlZ3xoMjIvaDQ0LzEwMjIzMzY5MjU2OTkwLmpwZ3w2OGZiNDE3OGY5MGViNzllMWY1NTdiZGJhOWZiODE1ZTE3YzY5Yzg4NDQxOTg2ZTJlOTI2NDk2MDZhNjFmYzVj', '2020-11-06 15:48:35'),
+	(44, 10, 3, 13, 'https://images-na.ssl-images-amazon.com/images/I/71rbenFNzRL._SL1500_.jpg', '2020-11-06 15:48:44'),
+	(45, 11, 3, 5, 'https://elmachetazo.com/pub/media/catalog/product/cache/89e492dca33e4630bae7e737f3495192/imp/ort/api-v1.1-file-public_files-pim-assets-cd-07-fd-5e-5efd07cd627ffe2c0f1db272-images-15-e7-91-5f-5f91e7152d6173d5d763c197-10026415.png', '2020-11-06 15:48:49'),
+	(46, 11, 3, 11, 'https://com-coca-cola-latamclientes-content-hero-prod-images.s3.amazonaws.com/products/jugos/ec/dvfresh_naranja_1200ml_pet.png', '2020-11-06 15:48:53'),
+	(47, 11, 3, 12, 'https://supercarnes.com/wp-content/uploads/2020/09/20200914_101815_clipped_rev_1.jpeg', '2020-11-06 15:48:58'),
+	(48, 11, 3, 13, 'https://pickingupapp.com/wp-content/uploads/2020/06/d703ff612fe092e0ee3e1d0bd4651fc7ed69697a_223532_01.jpg', '2020-11-06 15:49:02'),
+	(49, 12, 3, 5, 'https://cdnx.jumpseller.com/bepensa-dominicana/image/8535743/thumb/540/540?1588117262', '2020-11-06 15:49:16'),
+	(50, 12, 3, 11, 'https://cdnx.jumpseller.com/bepensa-dominicana/image/10111813/thumb/260/260?1594221906', '2020-11-06 15:49:20'),
+	(51, 12, 3, 12, 'https://jumbocolombiafood.vteximg.com.br/arquivos/ids/3430361-750-750/7702535015537.jpg?v=636958676598500000', '2020-11-06 15:49:24'),
+	(52, 12, 3, 13, 'https://bblonatural.mx/wp-content/uploads/2020/07/mandarina-galon.jpg', '2020-11-06 15:49:30'),
+	(53, 13, 3, 5, 'https://images-na.ssl-images-amazon.com/images/I/81vqKy582fL._SL1500_.jpg', '2020-11-06 15:49:40'),
+	(54, 13, 3, 11, 'https://mountainmerchantvt.com/wp-content/uploads/2019/06/v8.jpg', '2020-11-06 15:49:44'),
+	(55, 13, 3, 12, 'https://images.heb.com/is/image/HEBGrocery/000148544', '2020-11-06 15:49:48'),
+	(56, 13, 3, 13, 'https://bblonatural.mx/wp-content/uploads/2020/07/verde-galon.jpg', '2020-11-06 15:49:53'),
+	(57, 14, 3, 5, 'https://images-na.ssl-images-amazon.com/images/I/41hXT6y1tEL.jpg', '2020-11-06 15:49:58'),
+	(58, 14, 3, 11, 'https://images-na.ssl-images-amazon.com/images/I/7111MsqSh0L._SL1500_.jpg', '2020-11-06 15:50:03'),
+	(59, 14, 3, 12, 'https://supercarnes.com/wp-content/uploads/2020/07/20200713_083453.jpg', '2020-11-06 15:50:07'),
+	(60, 14, 3, 13, 'https://merkadoo.com/pub/media/catalog/product/cache/54c8da64368501a23b32801443f04eac/1/_/1_7bq5wcidgdghwg4r.jpg', '2020-11-06 15:50:11'),
+	(61, 15, 4, 14, 'https://www.farmacialeloir.com.ar/img/articulos/redoxitos_vitamina_c_gomitas_masticables_x_150_imagen1.jpg', '2020-11-06 15:50:24'),
+	(62, 15, 4, 15, 'https://lh3.googleusercontent.com/proxy/VYpYF5mFdgWKMgg8pSk40O-tImH8XYi3zg9CWWzb43ya-NKpD-tcVlgWLyd4I-CD5RWWYKfMKfd1Cwwke3hVjyXJdxpv0nw', '2020-11-06 15:50:28'),
+	(63, 15, 4, 16, 'https://images-na.ssl-images-amazon.com/images/I/81bmwCtXwkL._AC_SX425_.jpg', '2020-11-06 15:50:32'),
+	(64, 15, 4, 17, 'https://simaro.global.ssl.fastly.net/media/catalog/product/cache/1/image/1800x/040ec09b1e35df139433887a97daa66f/S/p/Spring-Valley-masticables-de-vitamina-C-mltiple-de-fruta-sabores-dietticos-suplemento-200-ct_2.jpeg', '2020-11-06 15:50:41'),
+	(65, 16, 4, 14, 'https://images-na.ssl-images-amazon.com/images/I/41WcgEC4mYL._AC_SX425_.jpg', '2020-11-06 15:51:43'),
+	(66, 16, 4, 15, 'https://m.media-amazon.com/images/S/aplus-media/vc/94d577ca-560b-49c5-b1bc-7c9f7c4aa986.__CR125,0,750,1000_PT0_SX300_V1___.jpg', '2020-11-06 15:51:49'),
+	(67, 16, 4, 16, 'https://www.vita33.com/images/productos/thumbnails/jamieson-vitamina-d3-1-000-iu-100-comprimidos-1-21065_thumb_434x520.jpg', '2020-11-06 15:51:53'),
+	(68, 16, 4, 17, 'https://images-na.ssl-images-amazon.com/images/I/71h48-l928L._AC_SY679_.jpg', '2020-11-06 15:51:58'),
+	(69, 17, 4, 14, 'https://quefarmacia.com/wp-content/uploads/2017/08/7502227421130_1.jpg', '2020-11-06 15:52:04'),
+	(70, 17, 4, 15, 'https://farmaciauniversal.com/assets/sources/05058-vitamina-e-mason_1.jpg', '2020-11-06 15:52:10'),
+	(71, 17, 4, 16, 'https://i.pinimg.com/originals/81/4b/ca/814bca1e8ad808b09a8a10db9e44abe0.jpg', '2020-11-06 15:52:16'),
+	(72, 17, 4, 17, 'https://www.naturesbounty.es/-/media/naturesbountyspain/product-images/vitamin-e-200iu.jpg?h=360&w=270&la=es-ES&hash=2CFD4F7FB8A9EB90BE3428B2832A561D84DB5147', '2020-11-06 15:52:21'),
+	(73, 18, 4, 14, 'https://images-na.ssl-images-amazon.com/images/I/51Fa%2B2DJxFL._AC_SX425_.jpg', '2020-11-06 15:52:27'),
+	(74, 18, 4, 15, 'https://www.farmaciasknop.com/wp-content/uploads/2019/12/Vitamina-C-1000-Zinc-FDC.png', '2020-11-06 15:52:32'),
+	(75, 18, 4, 16, 'https://tienda306.com/7776-large_default/quelato-de-zinc-natures-bounty-50-mg-100-pastillas.jpg', '2020-11-06 15:52:38'),
+	(76, 18, 4, 17, 'https://http2.mlstatic.com/zinc-gluconato-50mg-250cap-acne-testosterona-vitamina-gnc-bc-D_NQ_NP_942623-MCO25620860894_052017-F.jpg', '2020-11-06 15:52:45'),
+	(77, 19, 4, 14, 'https://d26lpennugtm8s.cloudfront.net/stores/796/648/products/magnesio-x-30-blister11-1a7ceb0a4efff0e60515690065174788-1024-1024.png', '2020-11-06 15:52:56'),
+	(78, 19, 4, 15, 'https://images.jumpseller.com/store/mis-vitaminas/2087844/cloruro-de-magnesio-50-capsulas-natural-freshly.jpg?0', '2020-11-06 15:53:01'),
+	(79, 19, 4, 16, 'https://i.pinimg.com/736x/22/4c/35/224c35e25bb7d12cfe3dc3a5d8d5594c.jpg', '2020-11-06 15:53:06'),
+	(80, 19, 4, 17, 'https://images-na.ssl-images-amazon.com/images/I/61BLX3xa1hL._AC_SY741_.jpg', '2020-11-06 15:53:11'),
+	(81, 20, 4, 14, 'https://resources.claroshop.com/imagenes-sanborns-ii/1200/7503008344730.jpg', '2020-11-06 15:53:17'),
+	(82, 20, 4, 15, 'https://media.misohinutricion.com/media/catalog/product/cache/4/small_image/265x325/9df78eab33525d08d6e5fb8d27136e95/b/-/b-complex-50-solaray_1.jpg', '2020-11-06 15:53:22'),
+	(83, 20, 4, 16, 'https://cdn1.evitamins.com/images/products/Sundown_Naturals/318965/500/318965_a.jpg', '2020-11-06 15:53:28'),
+	(84, 20, 4, 17, 'https://images-na.ssl-images-amazon.com/images/I/71-rPFdOqcL._AC_SY550_.jpg', '2020-11-06 15:53:40');
 /*!40000 ALTER TABLE `suministros` ENABLE KEYS */;
 
 -- Dumping structure for table superinstant1.tamanos
