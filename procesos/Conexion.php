@@ -261,4 +261,63 @@ class Conexion
             return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
         }
     }
+
+    function AddClientes($cedula, $nombre, $telefono, $tarjeta, $direccion)
+    {
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL add_clientes("' . $cedula . '","' . $nombre . '",' . $telefono . ',"' . hash('ripemd160', $tarjeta) . '","' . $direccion . '")';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                mysqli_close($this->conexion_bd);
+                return 'Cliente Agregado';
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
+
+    function GetFactura()
+    {
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL get_factura()';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                $result = [];
+                $res_array = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+                while ($res_array) {
+                    $result[] = $res_array;
+                    $res_array = mysqli_fetch_array($res, MYSQLI_ASSOC);
+                }
+                mysqli_free_result($res);
+                mysqli_close($this->conexion_bd);
+                return $result;
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
+
+    function AddCompra($id_factura, $cedula, $id_suministro, $ruc_sucursal, $forma_pago, $cantidad)
+    {
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL add_compra(' . $id_factura . ',"' . $cedula . '",' . $id_suministro . ',' . $ruc_sucursal . ',"' . $forma_pago . '",'.$cantidad.')';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                mysqli_close($this->conexion_bd);
+                return 'Compra realizada exitosamente!';
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
 }

@@ -1,13 +1,20 @@
 <?php
 include '../../procesos/Conexion.php';
 session_start();
+$mensaje = '';
+
 if (!isset($_SESSION['sessionSucursal'])) {
     header('Location: elegirSucursal.php');
+}
+if (isset($_SESSION['mensaje'])) {
+    $mensaje = $_SESSION['mensaje'];
+    unset($_SESSION['mensaje']);
 }
 
 $ruc_sucursal = $_SESSION['sessionSucursal'];
 $obj = new Conexion();
 $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
+
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +56,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         <div class="products-container">
             <?php for ($i = 0; $i < count($suministros); $i++) : ?>
                 <div class="product">
-                    <img src="https://d13lnhwm7sh4hi.cloudfront.net/wp-content/uploads/2020/03/20143131/4946406_coke-cola-origina-lata-12-oz-355-ml-011.jpg" alt="" class="product-img">
+                    <img src="<?= $suministros[$i]['imagen']?>" alt="" class="product-img">
                     <div class="product-description">
                         <div class="product-label">
                             <?= $suministros[$i]['producto'] ?>
@@ -83,6 +90,27 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
 </html>
 <script src="../../js/globalFunctions.js"></script>
 <script>
+    //MENSAJE DE COMPRA
+    let mensaje = <?= json_encode($mensaje) ?>;
+
+    if (mensaje != '') {
+        let noButton = document.getElementsByClassName('ok-button');
+        let modal = document.getElementById('custom-modal');
+        let msg = document.getElementById('modal-msg');
+
+        noButton[0].style.display = 'inline-block';
+        noButton[0].innerHTML = 'OK';
+
+        noButton[1].style.display = 'none';
+
+        document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/100/000000/checkmark.png";
+        msg.innerHTML = mensaje;
+
+        modal.style.display = 'block';
+        window.localStorage.removeItem('carrito');
+    }
+
+
     //CANTIDAD DE COMPRAS
     let carritoProducts = window.localStorage.getItem('carrito');
     let compras = document.getElementsByClassName('cant-compras');

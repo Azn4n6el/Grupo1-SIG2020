@@ -86,7 +86,7 @@ if (isset($_SESSION['message'])) {
         </div>
     </div>
 </body>
-
+<?php require '../cliente/custom-modal.html'?>
 </html>
 <script src="../../js/chart_v2.9.4.js"></script>
 <script src="../../js/globalFunctions.js"></script>

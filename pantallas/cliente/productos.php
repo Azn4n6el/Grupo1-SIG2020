@@ -71,7 +71,7 @@ for ($i = 0; $i < count($categoriaProducts); $i++) {
         <section class="wrap-products products-container">
             <?php for ($i = 0; $i < count($categoriaProducts); $i++) : ?>
                 <div class="category-product product">
-                    <img src="https://d13lnhwm7sh4hi.cloudfront.net/wp-content/uploads/2020/03/20143131/4946406_coke-cola-origina-lata-12-oz-355-ml-011.jpg" alt="" class="product-img">
+                    <img src="<?= $categoriaProducts[$i]['imagen']?>" alt="" class="product-img">
                     <div class="product-description">
                         <div class="product-label">
                             <?= $categoriaProducts[$i]['producto'] ?>
@@ -126,7 +126,7 @@ for ($i = 0; $i < count($categoriaProducts); $i++) {
             if (categoriaProducts[i][type].toUpperCase().indexOf(value.toUpperCase()) > -1) {
                 container[0].insertAdjacentHTML('beforeend', 
                 `<div class="category-product product">
-                    <img src="https://d13lnhwm7sh4hi.cloudfront.net/wp-content/uploads/2020/03/20143131/4946406_coke-cola-origina-lata-12-oz-355-ml-011.jpg" alt="" class="product-img">
+                    <img src="${categoriaProducts[i].imagen} alt="" class="product-img">
                     <div class="product-description">
                         <div class="product-label">
                             ${categoriaProducts[i].producto}
