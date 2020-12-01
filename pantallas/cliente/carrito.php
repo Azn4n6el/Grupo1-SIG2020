@@ -79,7 +79,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
                         Total:
                     </div>
                     <div class="total-amount" id="total">
-                        $1.07
+                        $1.070
                     </div>
                 </div>
                 <div class="checkout-container">
