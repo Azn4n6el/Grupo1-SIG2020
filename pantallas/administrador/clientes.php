@@ -80,13 +80,45 @@ if (isset($_SESSION['message'])) {
                     <div class="chart-container">
                         <canvas id="compras"></canvas>
                     </div>
-
+                    <div class="responsive-table">
+                        <table class="custom-table">
+                            <thead>
+                                <tr id="table-heading">
+                                    <th>Sucursal</th>
+                                    <th>Vitaminas D</th>
+                                    <th>Vitaminas C</th>
+                                    <th>Vitaminas Zinc</th>
+                                    <th>Vitaminas Magnesio</th>
+                                    <th>Vitaminas Complejo B</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-data">
+                                <tr>
+                                    <td>Condado</td>
+                                    <td>57</td>
+                                    <td>56</td>
+                                    <td>22</td>
+                                    <td>33</td>
+                                    <td>22</td>
+                                </tr>
+                                <tr>
+                                    <td>Total:</td>
+                                    <td>57</td>
+                                    <td>56</td>
+                                    <td>22</td>
+                                    <td>33</td>
+                                    <td>22</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </body>
-<?php require '../cliente/custom-modal.html'?>
+<?php require '../cliente/custom-modal.html' ?>
+
 </html>
 <script src="../../js/chart_v2.9.4.js"></script>
 <script src="../../js/globalFunctions.js"></script>
@@ -209,6 +241,7 @@ if (isset($_SESSION['message'])) {
         general.style.cssText = 'background-color: var(--form-color);transform:scale(1.1)';
         porSucursal.style.cssText = 'background-color: var(--button-color);transform:scale(1.0)';
         sucursalSelect.disabled = true;
+        let parent = document.getElementsByClassName("filtros-container");
         let suministrosName = [];
         let compras = [];
 
@@ -248,10 +281,12 @@ if (isset($_SESSION['message'])) {
                     compras.push(cantCompra);
                 }
             }
+
+
         }
 
-
         updateChart(chart, suministrosName, compras);
+        updateReport(suministrosName);
     }
 
     const showSucursal = () => {
@@ -305,8 +340,66 @@ if (isset($_SESSION['message'])) {
         }
 
         updateChart(chart, suministrosName, compras);
+        updateReport(suministrosName);
+
 
     }
+
+    const updateReport = (suministrosName) => {
+        /*RELLENAR REPORTE TEXTUAL*/
+        let titulos = document.getElementById('table-heading');
+        let data = document.getElementById('table-data');
+        let compras = [];
+        /*Limpiar Datos*/
+        titulos.innerHTML = '';
+        data.innerHTML = '';
+
+        titulos.insertAdjacentHTML("beforeend", `<th>Sucursal</th>`)
+
+        for (let i = 0; i < suministrosName.length; i++) {
+            titulos.insertAdjacentHTML("beforeend", `<th>${suministrosName[i]}</th>`)
+        }
+
+        /**/
+        for (let i = 0; i < sucursales.length; i++) {
+            data.insertAdjacentHTML("beforeend", `<tr><td>${sucursales[i]['direccion']}</td></tr>`)
+            for (let j = 0; j < suministrosName.length; j++) {
+                let cantCompra = 0;
+                for (const item of reabastece) {
+                    if (isAgua) {
+                        if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                            cantCompra = cantCompra + parseInt(item.cantidad);
+                        }
+                    } else {
+                        if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                            cantCompra = cantCompra + parseInt(item.cantidad);
+                        }
+                    }
+                }
+                data.children[i].insertAdjacentHTML("beforeend", `<td>${cantCompra}</td>`)
+            }
+        }
+
+        let childCount = data.childElementCount;
+        data.insertAdjacentHTML("beforeend", `<tr><td><strong>Total:</strong></td></tr>`)
+        for (let j = 0; j < suministrosName.length; j++) {
+            let cantCompra = 0;
+            for (const item of reabastece) {
+                if (isAgua) {
+                    if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
+                        cantCompra = cantCompra + parseInt(item.cantidad);
+                    }
+                } else {
+                    if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
+                        cantCompra = cantCompra + parseInt(item.cantidad);
+                    }
+                }
+
+            }
+            data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>${cantCompra}</strong></td>`)
+        }
+    }
+
 
     const validateType = () => {
         if (sucursalSelect.disabled == true) {
