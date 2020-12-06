@@ -44,9 +44,17 @@ $suministros = $obj->GetSuministros();
                         <div class="filter-type">
                             <button type="button" class="type-button" id="general" onclick="showGeneral()">General</button>
                             <button type="button" class="type-button" id="porSucursal" onclick="showSucursal()">Por Sucursal</button>
+                            <button type="button" class="type-button" id="porProvincia" onclick="showProvincia()">Por Provincia</button>
                         </div>
                     </div>
                     <div class="form-group">
+                        <div class="form-input3">
+                            <label for="provincia">Provincia</label>
+                            <div class="select-container">
+                                <select name="provincia" id="provincia" class="enviar-input custom-select" required disabled onchange="validateType()">
+                                </select>
+                            </div>
+                        </div>
                         <div class="form-input3">
                             <label for="sucursal">Sucursal</label>
                             <div class="select-container">
@@ -54,6 +62,8 @@ $suministros = $obj->GetSuministros();
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="form-group">
                         <div class="form-input3">
                             <label for="categoria">Categoría</label>
                             <div class="select-container">
@@ -128,21 +138,24 @@ $suministros = $obj->GetSuministros();
     let categoriasSelect = document.getElementById('categoria');
     let tamanosSelect = document.getElementById('tamano');
     let ventasChart = document.getElementById('ventas');
-
+    let provinciasSelect = document.getElementById('provincia');
 
     let categorias = [];
     let tamanos = [];
     let productos = [];
+    let provincias = [];
 
     let uniqueCategory = [];
     let uniqueTamanos = [];
     let uniqueProducts = [];
+    let uniqueCountry = [];
 
     let isAgua = false;
 
     //FILTRO SELECCIONADO
     let general = document.getElementById('general');
     let porSucursal = document.getElementById('porSucursal');
+    let porProvincia = document.getElementById('porProvincia');
 
     general.style.cssText = 'background-color: #fcd06f;transform:scale(1.1)';
 
@@ -177,6 +190,27 @@ $suministros = $obj->GetSuministros();
         option.value = categorias[i].categoriaID;
         categoriasSelect.appendChild(option);
     }
+
+    // TRAE TODAS LAS PROVINCIAS EXISTENTES
+    for (const item of sucursales) {
+        if (uniqueCountry.indexOf(item.id_provincia) < 0) {
+            uniqueCountry.push(item.id_provincia);
+            let countryObject = {
+                provincia: item.provincia,
+                provinciaID: item.id_provincia
+            }
+            provincias.push(countryObject);
+        }
+    }
+
+    for (let i = 0; i < provincias.length; i++) {
+        let option = document.createElement('option');
+        option.text = provincias[i].provincia
+        option.value = provincias[i].provinciaID
+        provinciasSelect.appendChild(option);
+    }
+
+
 
     const showProducts = (value, text) => {
         //VACIAR LOS SELECTS
@@ -230,8 +264,14 @@ $suministros = $obj->GetSuministros();
 
     const showGeneral = () => {
         general.style.cssText = 'background-color: var(--form-color);transform:scale(1.1)';
-        porSucursal.style.cssText = 'background-color: var(--button-color);transform:scale(1.0)';
+        porSucursal.style.cssText = 'background-color: var(--button-color);transform:scale(1.0);';
+        porSucursal.style.cssText = "type-button:hover";
+        porProvincia.style.cssText = 'background-color: var(--button-color);transform:scale(1.0);';
+        porProvincia.style.cssText = "type-button:hover";
+
         sucursalSelect.disabled = true;
+        provinciasSelect.disabled = true;
+
         let suministrosName = [];
         let ventas = [];
 
@@ -281,7 +321,13 @@ $suministros = $obj->GetSuministros();
     const showSucursal = () => {
         porSucursal.style.cssText = 'background-color: var(--form-color);transform:scale(1.1)';
         general.style.cssText = 'background-color: var(--button-color);transform:scale(1.0)';
+        general.style.cssText = "type-button:hover";
+        porProvincia.style.cssText = 'background-color: var(--button-color);transform:scale(1.0);';
+        porProvincia.style.cssText = "type-button:hover";
+
         sucursalSelect.disabled = false;
+        provinciasSelect.disabled = true;
+
         let suministrosName = [];
         let ventas = [];
 
@@ -332,6 +378,68 @@ $suministros = $obj->GetSuministros();
         updateReport(suministrosName);
     }
 
+    const showProvincia = () => {
+        porProvincia.style.cssText = 'background-color: var(--form-color);transform:scale(1.1)';
+        general.style.cssText = 'background-color: var(--button-color);transform:scale(1.0)';
+        general.style.cssText = "type-button:hover";
+        porSucursal.style.cssText = 'background-color: var(--button-color);transform:scale(1.0);';
+        porSucursal.style.cssText = "type-button:hover";
+
+        sucursalSelect.disabled = true;
+        provinciasSelect.disabled = false;
+
+        let suministrosName = [];
+        let ventas = [];
+
+        //SI LA CATEGORIA ES AGUA
+        if (isAgua) {
+
+            //GUARDAR LOS NOMBRES PARA EL AXIS X
+            for (const item of tamanos) {
+                suministrosName.push(item.tamano);
+            }
+
+            //SUMA DE CANTIDADES
+            if (suministrosName.length > 0) {
+                for (let i = 0; i < suministrosName.length; i++) {
+                    let ganancias = 0;
+                    for (const item of reabastece) {
+                        if (item.producto == 'Agua' && item.tamano == suministrosName[i] && item.id_provincia == provinciasSelect.value) {
+                            ganancias = ganancias + (item.precio * item.cantidad)
+                        }
+                    }
+                    ventas.push(ganancias);
+                }
+            }
+
+        } else {
+            //GUARDAR LOS NOMBRES PARA EL AXIS X
+            for (const item of suministros) {
+                if (item.id_categoria == categoriasSelect.value && item.id_tamano == tamanosSelect.value) {
+                    suministrosName.push(item.producto);
+                }
+            }
+
+            //SUMA DE CANTIDADES
+            if (suministrosName.length > 0) {
+                for (let i = 0; i < suministrosName.length; i++) {
+                    let ganancias = 0;
+                    for (const item of reabastece) {
+                        if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value && item.id_provincia == provinciasSelect.value) {
+                            ganancias = ganancias + (item.precio * item.cantidad)
+                        }
+                    }
+                    ventas.push(ganancias);
+                }
+            }
+        }
+
+        updateChart(chart, suministrosName, ventas);
+        updateReport(suministrosName);
+    }
+
+
+
     const updateReport = (suministrosName) => {
         /*RELLENAR REPORTE TEXTUAL*/
         let titulos = document.getElementById('table-heading');
@@ -341,58 +449,110 @@ $suministros = $obj->GetSuministros();
         titulos.innerHTML = '';
         data.innerHTML = '';
 
-        titulos.insertAdjacentHTML("beforeend", `<th>Sucursal</th>`)
+        if (provinciasSelect.disabled) {
+            titulos.insertAdjacentHTML("beforeend", `<th>Sucursal</th>`)
+            titulos.insertAdjacentHTML("beforeend", `<th>Super</th>`)
+            titulos.insertAdjacentHTML("beforeend", `<th>Provincia</th>`)
+        } else {
+            titulos.insertAdjacentHTML("beforeend", `<th>Provincia</th>`)
+        }
 
         for (let i = 0; i < suministrosName.length; i++) {
             titulos.insertAdjacentHTML("beforeend", `<th>${suministrosName[i]}</th>`)
         }
+        if (provinciasSelect.disabled) {
+            /**/
+            for (let i = 0; i < sucursales.length; i++) {
+                data.insertAdjacentHTML("beforeend", `<tr><td>${sucursales[i]['direccion']}</td></tr>`)
+                data.children[i].insertAdjacentHTML("beforeend", `<td>${sucursales[i]['nombre']}</td>`)
+                data.children[i].insertAdjacentHTML("beforeend", `<td>${sucursales[i]['provincia']}</td>`)
 
-        /**/
-        for (let i = 0; i < sucursales.length; i++) {
-            data.insertAdjacentHTML("beforeend", `<tr><td>${sucursales[i]['direccion']}</td></tr>`)
+                for (let j = 0; j < suministrosName.length; j++) {
+                    let ganancias = 0;
+                    for (const item of reabastece) {
+                        if (isAgua) {
+                            if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                                ganancias = ganancias + (item.precio * item.cantidad)
+                            }
+                        } else {
+                            if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                                ganancias = ganancias + (item.precio * item.cantidad)
+                            }
+                        }
+                    }
+                    data.children[i].insertAdjacentHTML("beforeend", `<td>$${ganancias}</td>`)
+                }
+            }
+
+            let childCount = data.childElementCount;
+            data.insertAdjacentHTML("beforeend", `<tr><td colspan=3><strong>Total:</strong></td></tr>`)
             for (let j = 0; j < suministrosName.length; j++) {
                 let ganancias = 0;
                 for (const item of reabastece) {
                     if (isAgua) {
-                        if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                        if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     } else {
-                        if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                        if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
+
                 }
-                data.children[i].insertAdjacentHTML("beforeend", `<td>$${ganancias}</td>`)
+                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>$${ganancias}</strong></td>`)
+            }
+        } else {
+            for (let i = 0; i < provincias.length; i++) {
+                data.insertAdjacentHTML("beforeend", `<tr><td>${sucursales[i]['provincia']}</td></tr>`)
+
+                for (let j = 0; j < suministrosName.length; j++) {
+                    let ganancias = 0;
+                    for (const item of reabastece) {
+                        if (isAgua) {
+                            if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.id_provincia == provincias[i].provinciaID) {
+                                ganancias = ganancias + parseInt(item.cantidad);
+                            }
+                        } else {
+                            if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.id_provincia == provincias[i].provinciaID) {
+                                ganancias = ganancias + parseInt(item.cantidad);
+                            }
+                        }
+                    }
+                    data.children[i].insertAdjacentHTML("beforeend", `<td>${ganancias}</td>`)
+                }
+
+            }
+
+            let childCount = data.childElementCount;
+            data.insertAdjacentHTML("beforeend", `<tr><td><strong>Total:</strong></td></tr>`)
+            for (let j = 0; j < suministrosName.length; j++) {
+                let ganancias = 0;
+                for (const item of reabastece) {
+                    if (isAgua) {
+                        if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
+                            ganancias = ganancias + parseInt(item.cantidad);
+                        }
+                    } else {
+                        if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
+                            ganancias = ganancias + parseInt(item.cantidad);
+                        }
+                    }
+                }
+                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>${ganancias}</strong></td>`)
             }
         }
 
-        let childCount = data.childElementCount;
-        data.insertAdjacentHTML("beforeend", `<tr><td><strong>Total:</strong></td></tr>`)
-        for (let j = 0; j < suministrosName.length; j++) {
-            let ganancias = 0;
-            for (const item of reabastece) {
-                if (isAgua) {
-                    if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
-                        ganancias = ganancias + (item.precio * item.cantidad)
-                    }
-                } else {
-                    if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
-                        ganancias = ganancias + (item.precio * item.cantidad)
-                    }
-                }
-
-            }
-            data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>$${ganancias}</strong></td>`)
-        }
     }
 
 
     const validateType = () => {
-        if (sucursalSelect.disabled == true) {
+        if (sucursalSelect.disabled && provinciasSelect.disabled) {
             showGeneral();
-        } else {
+        } else if (!sucursalSelect.disabled) {
             showSucursal();
+        } else if (!provinciasSelect.disabled){
+            showProvincia();
         }
     }
 
