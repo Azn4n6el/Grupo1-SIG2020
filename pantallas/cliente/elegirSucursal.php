@@ -1,7 +1,7 @@
 <?php
 include '../../procesos/Conexion.php';
 session_start();
-if (isset($_SESSION['sessionSucursal'])){
+if (isset($_SESSION['sessionSucursal'])) {
     header('Location: main.php');
 }
 
@@ -39,7 +39,7 @@ $sucursales = $obj->GetAllSucursales();
                                 <option value="0" disabled selected>Seleccione una sucursal</option>
                                 <?php for ($i = 0; $i < count($sucursales); $i++) : ?>
                                     <option value="<?= $sucursales[$i]['ruc_sucursal'] ?>">
-                                        <?=$sucursales[$i]['direccion']?>
+                                        <?= $sucursales[$i]['direccion'] ?>, <?= $sucursales[$i]['nombre'] ?>
                                     </option>
                                 <?php endfor ?>
                             </select>
@@ -47,7 +47,11 @@ $sucursales = $obj->GetAllSucursales();
                     </div>
                 </div>
                 <input type="submit" class="next-button" value="Siguiente">
+                <div>
+                    <a href="../administrador/login.php"><button class="next-button" type="button">Ir al centro</button></a>
+                </div>
             </form>
+
         </div>
     </div>
 </body>
