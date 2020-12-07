@@ -1,5 +1,4 @@
 const createChart = (id, XLabels, dataset, title, legendLabel, xtitle, ytitle) => {
-
     let myChart = new Chart(id, {
         type: 'bar',
         data: {

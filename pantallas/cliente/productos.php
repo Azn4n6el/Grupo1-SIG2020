@@ -126,7 +126,7 @@ for ($i = 0; $i < count($categoriaProducts); $i++) {
             if (categoriaProducts[i][type].toUpperCase().indexOf(value.toUpperCase()) > -1) {
                 container[0].insertAdjacentHTML('beforeend', 
                 `<div class="category-product product">
-                    <img src="${categoriaProducts[i].imagen} alt="" class="product-img">
+                    <img src="${categoriaProducts[i].imagen}" alt="" class="product-img">
                     <div class="product-description">
                         <div class="product-label">
                             ${categoriaProducts[i].producto}

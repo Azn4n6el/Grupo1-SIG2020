@@ -172,12 +172,12 @@ if (isset($_SESSION['message'])) {
 
 
     //INICIALIZAR GRÁFICA
-    let chart = createChart(comprasChart, 0, 0, 'Productos Más Comprados', 'Cajas Compradas', 'Productos', 'Cajas');
+    let chart = createChart(comprasChart, 0, 0, 'Compras Realizadas', 'Cajas Compradas', 'Productos', 'Cajas');
 
     //LLENAR LOS SELECTS
     for (const item of sucursales) {
         let option = document.createElement('option');
-        option.text = item.direccion;
+        option.text = item.direccion + ', ' + item.nombre;
         option.value = item.ruc_sucursal;
         sucursalSelect.appendChild(option);
     }

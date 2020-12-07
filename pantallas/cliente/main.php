@@ -33,7 +33,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
     <?php require('head.html'); ?>
     <div class="main-container">
         <div class="sucursal-title">
-            Sucursal <?= $suministros[0]['direccion'] ?>
+            Sucursal <?= $suministros[0]['direccion'] ?>, <?= $suministros[0]['nombre'] ?>
         </div>
         <div class="carousel-container">
             <div id="currentSlide" class="slides">
@@ -52,6 +52,9 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
                 <button type="button" class="carousel-button" onclick="prevSlide(this)"><img src="https://img.icons8.com/ios-filled/65/83C3A9/chevron-left.png" /></button>
                 <button type="button" class="carousel-button" onclick="nextSlide(this)"><img src="https://img.icons8.com/fluent-systems-filled/65/83C3A9/chevron-right--v2.png" /></button>
             </div>
+        </div>
+        <div class="sucursal-title">
+           Nuestros Productos
         </div>
         <div class="products-container">
             <?php for ($i = 0; $i < count($suministros); $i++) : ?>

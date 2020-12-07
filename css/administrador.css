@@ -1,3 +1,8 @@
+html {
+    overflow-y: hidden;
+}
+
+
 /*ADMINISTRADOR LOGIN*/
 
 .login-body {
@@ -247,7 +252,7 @@
     padding: 20px;
     padding-top: 40px;
     overflow: auto;
-    max-height: 82vh;
+    max-height: 85vh;
     min-height: 500px;
     box-sizing: border-box;
 }
@@ -401,4 +406,15 @@
 .reports-table tbody tr td {
     padding: 5px;
     border: 1px solid black;
+}
+
+.charts-pie-container {
+    margin: 50px 0;
+    display: flex;
+    min-width: 1000px;
+}
+
+.chartPie-container {
+    position: relative;
+    width: 50%;
 }

@@ -1,6 +1,6 @@
-<?php 
+<?php
 session_start();
-if (isset($_SESSION['message'])){
+if (isset($_SESSION['message'])) {
     $error = $_SESSION['message'];
     unset($_SESSION['message']);
 } else {
@@ -46,21 +46,26 @@ if (isset($_SESSION['message'])){
             </div>
             <div class="form-input">
                 <label for="cedula">Cédula:</label>
-                <input type="text" id="cedula" name="cedula" class="input-text" autofocus required>
+                <input type="text" id="cedula" name="cedula" class="input-text" autofocus required autocomplete="off">
             </div>
             <div class="form-input">
                 <label for="passwd">Contraseña:</label>
                 <input type="password" id="passwd" name="passwd" class="input-text" required>
             </div>
-            <?php if ($error != '') :?>
-            <div class="error-message">
-                <h4><?=$error?></h4>
-            </div>
+            <?php if ($error != '') : ?>
+                <div class="error-message">
+                    <h4><?= $error ?></h4>
+                </div>
             <?php endif ?>
             <div class="login-button">
                 <input type="submit" value="Iniciar" class="sign-button">
             </div>
+            <div class="login-button">
+                <a href="../cliente/elegirSucursal.php" ><button class="sign-button" type="button"> Ir a la tienda</button></a>
+            </div>
+
         </form>
     </div>
 </body>
+
 </html>

@@ -167,7 +167,7 @@ $suministros = $obj->GetSuministros();
     //LLENAR LOS SELECTS
     for (const item of sucursales) {
         let option = document.createElement('option');
-        option.text = item.direccion;
+        option.text = item.direccion + ', ' + item.nombre;
         option.value = item.ruc_sucursal;
         sucursalSelect.appendChild(option);
     }

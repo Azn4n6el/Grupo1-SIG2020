@@ -117,6 +117,12 @@
         font-size: 25px;
         height: 100%;
     }
+    
+    .report-product {
+        font-size: 20px;
+        margin: 10px 10px;
+        text-align: end;
+    }
     /* Elegir Sucursal*/
     
     .image-container {
@@ -160,7 +166,7 @@
     }
     
     .next-button {
-        margin-top: 50px;
+        margin-top: 20px;
         padding: 5px;
         width: 10rem;
         font-size: 1.7rem;
