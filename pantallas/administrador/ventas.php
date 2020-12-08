@@ -12,6 +12,7 @@ $nombre = $_SESSION['user-data']['usuario'];
 $notificaciones = $obj->GetNotificaciones($ruc_centro);
 $sucursales = $obj->GetSucursales($ruc_centro);
 $reabastece = $obj->GetReabastece($ruc_centro);
+$devuelve = $obj->GetDevuelve($ruc_centro);
 $suministros = $obj->GetSuministros();
 
 ?>
@@ -133,6 +134,7 @@ $suministros = $obj->GetSuministros();
     let sucursales = <?php echo json_encode($sucursales); ?>;
     let suministros = <?php echo json_encode($suministros); ?>;
     let reabastece = <?php echo json_encode($reabastece); ?>;
+    let devuelve = <?php echo json_encode($devuelve); ?>;
 
     let sucursalSelect = document.getElementById('sucursal');
     let categoriasSelect = document.getElementById('categoria');
@@ -162,7 +164,7 @@ $suministros = $obj->GetSuministros();
 
 
     //INICIALIZAR GRÁFICA
-    let chart = createChart(ventasChart, 0, 0, 'Ventas de la Empresa', 'Ganancias', 'Productos', 'Ventas ($)');
+    let chart = createChart2(ventasChart, 0, 0, 0, 'Ventas de la Empresa', 'Ganancias', 'Pérdidas', 'Productos', 'Ventas ($)');
 
     //LLENAR LOS SELECTS
     for (const item of sucursales) {
@@ -274,6 +276,7 @@ $suministros = $obj->GetSuministros();
 
         let suministrosName = [];
         let ventas = [];
+        let devoluciones = [];
 
         if (isAgua) {
             for (const item of tamanos) {
@@ -283,12 +286,19 @@ $suministros = $obj->GetSuministros();
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (item.producto == 'Agua' && item.tamano == suministrosName[i]) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
+                    for (const item of devuelve) {
+                        if (item.producto == 'Agua' && item.tamano == suministrosName[i]) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    }
                     ventas.push(ganancias);
+                    devoluciones.push(perdidas);
                 }
             }
 
@@ -303,18 +313,25 @@ $suministros = $obj->GetSuministros();
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
+                    for (const item of devuelve) {
+                        if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    }
                     ventas.push(ganancias);
+                    devoluciones.push(perdidas);
                 }
             }
         }
 
 
-        updateChart(chart, suministrosName, ventas);
+        updateChart2(chart, suministrosName, ventas, devoluciones);
         updateReport(suministrosName);
     }
 
@@ -330,6 +347,7 @@ $suministros = $obj->GetSuministros();
 
         let suministrosName = [];
         let ventas = [];
+        let devoluciones = [];
 
         //SI LA CATEGORIA ES AGUA
         if (isAgua) {
@@ -343,12 +361,19 @@ $suministros = $obj->GetSuministros();
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (item.producto == 'Agua' && item.tamano == suministrosName[i] && item.ruc_sucursal == sucursalSelect.value) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
+                    for (const item of devuelve) {
+                        if (item.producto == 'Agua' && item.tamano == suministrosName[i] && item.ruc_sucursal == sucursalSelect.value) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    }
                     ventas.push(ganancias);
+                    devoluciones.push(perdidas);
                 }
             }
 
@@ -364,17 +389,24 @@ $suministros = $obj->GetSuministros();
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursalSelect.value) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
+                    for (const item of devuelve) {
+                        if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursalSelect.value) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    }
                     ventas.push(ganancias);
+                    devoluciones.push(perdidas);
                 }
             }
         }
 
-        updateChart(chart, suministrosName, ventas);
+        updateChart2(chart, suministrosName, ventas, devoluciones);
         updateReport(suministrosName);
     }
 
@@ -390,6 +422,7 @@ $suministros = $obj->GetSuministros();
 
         let suministrosName = [];
         let ventas = [];
+        let devoluciones = [];
 
         //SI LA CATEGORIA ES AGUA
         if (isAgua) {
@@ -403,12 +436,19 @@ $suministros = $obj->GetSuministros();
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (item.producto == 'Agua' && item.tamano == suministrosName[i] && item.id_provincia == provinciasSelect.value) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
+                    for (const item of devuelve) {
+                        if (item.producto == 'Agua' && item.tamano == suministrosName[i] && item.id_provincia == provinciasSelect.value) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    }
                     ventas.push(ganancias);
+                    devoluciones.push(perdidas);
                 }
             }
 
@@ -424,17 +464,24 @@ $suministros = $obj->GetSuministros();
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value && item.id_provincia == provinciasSelect.value) {
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
+                    for (const item of devuelve) {
+                        if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value && item.id_provincia == provinciasSelect.value) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    }
                     ventas.push(ganancias);
+                    devoluciones.push(perdidas);
                 }
             }
         }
 
-        updateChart(chart, suministrosName, ventas);
+        updateChart2(chart, suministrosName, ventas, devoluciones);
         updateReport(suministrosName);
     }
 
@@ -469,6 +516,7 @@ $suministros = $obj->GetSuministros();
 
                 for (let j = 0; j < suministrosName.length; j++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (isAgua) {
                             if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
@@ -480,7 +528,19 @@ $suministros = $obj->GetSuministros();
                             }
                         }
                     }
-                    data.children[i].insertAdjacentHTML("beforeend", `<td>$${ganancias}</td>`)
+                    for (const item of devuelve) {
+                        if (isAgua) {
+                            if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                                perdidas = perdidas + (item.precio * item.cantidad)
+                            }
+                        } else {
+                            if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
+                                perdidas = perdidas + (item.precio * item.cantidad)
+                            }
+                        }
+                    }
+
+                    data.children[i].insertAdjacentHTML("beforeend", `<td>$${ganancias-perdidas}</td>`)
                 }
             }
 
@@ -488,6 +548,7 @@ $suministros = $obj->GetSuministros();
             data.insertAdjacentHTML("beforeend", `<tr><td colspan=3><strong>Total:</strong></td></tr>`)
             for (let j = 0; j < suministrosName.length; j++) {
                 let ganancias = 0;
+                let perdidas = 0;
                 for (const item of reabastece) {
                     if (isAgua) {
                         if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
@@ -498,9 +559,19 @@ $suministros = $obj->GetSuministros();
                             ganancias = ganancias + (item.precio * item.cantidad)
                         }
                     }
-
                 }
-                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>$${ganancias}</strong></td>`)
+                for (const item of devuelve) {
+                    if (isAgua) {
+                        if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    } else {
+                        if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
+                            perdidas = perdidas + (item.precio * item.cantidad)
+                        }
+                    }
+                }
+                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>$${ganancias-perdidas}</strong></td>`)
             }
         } else {
             for (let i = 0; i < provincias.length; i++) {
@@ -508,18 +579,30 @@ $suministros = $obj->GetSuministros();
 
                 for (let j = 0; j < suministrosName.length; j++) {
                     let ganancias = 0;
+                    let perdidas = 0;
                     for (const item of reabastece) {
                         if (isAgua) {
                             if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.id_provincia == provincias[i].provinciaID) {
-                                ganancias = ganancias + parseInt(item.cantidad);
+                                ganancias = ganancias + (item.precio * item.cantidad);
                             }
                         } else {
                             if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.id_provincia == provincias[i].provinciaID) {
-                                ganancias = ganancias + parseInt(item.cantidad);
+                                ganancias = ganancias + (item.precio * item.cantidad);
                             }
                         }
                     }
-                    data.children[i].insertAdjacentHTML("beforeend", `<td>${ganancias}</td>`)
+                    for (const item of devuelve) {
+                        if (isAgua) {
+                            if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.id_provincia == provincias[i].provinciaID) {
+                                perdidas = perdidas + (item.precio * item.cantidad);
+                            }
+                        } else {
+                            if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.id_provincia == provincias[i].provinciaID) {
+                                perdidas = perdidas + (item.precio * item.cantidad);
+                            }
+                        }
+                    }
+                    data.children[i].insertAdjacentHTML("beforeend", `<td>$${ganancias-perdidas}</td>`)
                 }
 
             }
@@ -528,19 +611,33 @@ $suministros = $obj->GetSuministros();
             data.insertAdjacentHTML("beforeend", `<tr><td><strong>Total:</strong></td></tr>`)
             for (let j = 0; j < suministrosName.length; j++) {
                 let ganancias = 0;
+                let perdidas = 0;
                 for (const item of reabastece) {
                     if (isAgua) {
                         if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
-                            ganancias = ganancias + parseInt(item.cantidad);
+                            ganancias = ganancias + (item.precio * item.cantidad);
                         }
                     } else {
                         if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
-                            ganancias = ganancias + parseInt(item.cantidad);
+                            ganancias = ganancias + (item.precio * item.cantidad);
                         }
                     }
                 }
-                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>${ganancias}</strong></td>`)
+                for (const item of devuelve) {
+                    if (isAgua) {
+                        if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
+                            perdidas = perdidas + (item.precio * item.cantidad);
+                        }
+                    } else {
+                        if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
+                            perdidas = perdidas + (item.precio * item.cantidad);
+                        }
+                    }
+                }
+                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>$${ganancias-perdidas}</strong></td>`)
             }
+
+
         }
 
     }
@@ -551,7 +648,7 @@ $suministros = $obj->GetSuministros();
             showGeneral();
         } else if (!sucursalSelect.disabled) {
             showSucursal();
-        } else if (!provinciasSelect.disabled){
+        } else if (!provinciasSelect.disabled) {
             showProvincia();
         }
     }
