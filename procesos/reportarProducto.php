@@ -22,6 +22,7 @@ if (!empty($_POST)){
             break;
             }
         }
+        var_dump($id_suministro);
         $mensaje = $obj->AddDevuelve($id_suministro,$ruc_sucursal,$cantidad,$motivo);
     } else {
         $mensaje = 'Código no válido.';
