@@ -368,4 +368,22 @@ class Conexion
             return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
         }
     }
+
+    function AddDevuelve($id_suministro, $ruc_sucursal, $cantidad, $motivo)
+    {
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL add_devuelve(' . $id_suministro . ',' . $ruc_sucursal . ','.$cantidad.',"'.$motivo.'")';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                mysqli_close($this->conexion_bd);
+                return 'Producto Reportado!';
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
+
 }
