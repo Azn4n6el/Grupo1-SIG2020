@@ -118,10 +118,21 @@
         height: 100%;
     }
     
-    .report-product {
-        font-size: 20px;
+    .report-product-container {
+        display: flex;
+        justify-content: flex-end;
         margin: 10px 10px;
-        text-align: end;
+    }
+    
+    .report-product {
+        display: flex;
+        justify-content: space-between;
+        font-size: 20px;
+        color: black;
+    }
+    
+    .report-product img {
+        margin-right: 5px;
     }
     /* Elegir Sucursal*/
     
@@ -402,10 +413,6 @@
         width: 300px;
     }
     
-    .select-container:after {
-        top: 6px;
-    }
-    
     .filter-select {
         margin-top: 0;
         background-color: transparent;
@@ -535,6 +542,10 @@
         margin: 0 auto;
         width: inherit;
         justify-content: center;
+    }
+    
+    .number-container2 {
+        margin: 0;
     }
     
     .input-cantidad {

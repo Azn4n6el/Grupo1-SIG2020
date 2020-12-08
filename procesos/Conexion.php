@@ -308,7 +308,7 @@ class Conexion
     {
         $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
         if ($this->conexion_bd) {
-            $sql = 'CALL add_compra(' . $id_factura . ',"' . $cedula . '",' . $id_suministro . ',' . $ruc_sucursal . ',"' . $forma_pago . '",'.$cantidad.')';
+            $sql = 'CALL add_compra(' . $id_factura . ',"' . $cedula . '",' . $id_suministro . ',' . $ruc_sucursal . ',"' . $forma_pago . '",' . $cantidad . ')';
             $res = mysqli_query($this->conexion_bd, $sql);
             if ($res) {
                 mysqli_close($this->conexion_bd);
@@ -321,7 +321,8 @@ class Conexion
         }
     }
 
-    function GetProductosMasComprados($ruc_centro){
+    function GetProductosMasComprados($ruc_centro)
+    {
         $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
         if ($this->conexion_bd) {
             $sql = 'CALL get_productosMasCompradosByCentroRUC("' . $ruc_centro . '")';
@@ -345,7 +346,8 @@ class Conexion
         }
     }
 
-    function GetSucursalesMasCompras($ruc_centro){
+    function GetSucursalesMasCompras($ruc_centro)
+    {
         $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
         if ($this->conexion_bd) {
             $sql = 'CALL get_sucursalMasComprasByCentroRUC("' . $ruc_centro . '")';
