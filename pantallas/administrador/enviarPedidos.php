@@ -79,7 +79,6 @@ $suministros = $obj->GetSuministros();
                         </div>
                     </div>
                     <div class="form-group">
-
                         <div class="form-input2">
                             <label for="precio">Precio ($) / caja </label>
                             <div class="number-container">
