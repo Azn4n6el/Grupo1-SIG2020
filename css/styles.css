@@ -129,6 +129,15 @@ li {
     margin-top: 20px;
 }
 
+.form-input4 {
+    background-color: transparent;
+    border-radius: 5px;
+    font-size: 3rem;
+    padding: 5px;
+    text-indent: 40px;
+    width: 400px;
+}
+
 .enviar-input {
     margin-top: 10px;
     font-size: 1.3rem;

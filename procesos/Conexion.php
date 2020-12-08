@@ -368,4 +368,20 @@ class Conexion
             return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
         }
     }
+
+    function AddNuevosProductos($categoria, $producto, $id_producto, $tamaño){
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL add_producto(' . $categoria. ',"' . $producto . '",' . $id_producto . ',' . $tamaño . '")';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                mysqli_close($this->conexion_bd);
+                return 'Producto Guardado exitosamente!';
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
 }
