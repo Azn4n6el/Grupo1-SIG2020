@@ -8,7 +8,6 @@ $suministros = $obj->GetSuministros();
 $repetido = false;
 
 if (!empty($_POST)){
-    $id_suministro = $_POST['id'];
     $categoria = $_POST['categoria'];
     $tamano = $_POST['tamano'];
     $producto = $_POST['producto'];
@@ -21,12 +20,13 @@ if (!empty($_POST)){
         }
     }
     if (!$repetido){
-        $msj = $obj->UpdateSuministros($id_suministro, $categoria, $tamano, $producto);
+        
+        $id_producto = $obj->AddProductos($producto);
+        $msj = $obj->AddSuministros($categoria, $tamano, $id_producto['id_producto']);
     } else {
-        $msj = 'Error: No se pudo actualizar, el producto ya existe.';
+        $msj = 'Error: No se pudo agregar, el producto ya existe.';
     }
 }
 
 $_SESSION['message'] = $msj;
-header('location: ../pantallas/administrador/actualizarProducto.php?id_suministro='.$id_suministro);
-?>
+header('location: ../pantallas/administrador/agregarProductos.php');

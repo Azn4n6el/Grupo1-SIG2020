@@ -105,6 +105,7 @@ $suministros = $obj->GetInventarioBySucursal($ruc_sucursal);
         noButton[0].innerHTML = 'OK';
 
         noButton[1].style.display = 'none';
+        noButton[2].style.display = 'none';
 
         document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/100/000000/checkmark.png";
         msg.innerHTML = mensaje;

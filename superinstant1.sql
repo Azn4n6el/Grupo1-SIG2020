@@ -109,6 +109,19 @@ BEGIN
 END//
 DELIMITER ;
 
+-- Dumping structure for procedure superinstant1.add_productos
+DELIMITER //
+CREATE PROCEDURE `add_productos`(
+	IN `descripcion2` VARCHAR(50)
+)
+BEGIN
+	INSERT INTO productos(descripcion)
+	VALUES(descripcion2);
+	
+	SELECT id_producto FROM productos ORDER BY id_producto DESC LIMIT 1;
+END//
+DELIMITER ;
+
 -- Dumping structure for procedure superinstant1.add_reabastece
 DELIMITER //
 CREATE PROCEDURE `add_reabastece`(
@@ -133,6 +146,19 @@ BEGIN
 		VALUES(suministro_id, sucursal_ruc, cantidad2, precio3);
 	END IF;
 
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure superinstant1.add_suministros
+DELIMITER //
+CREATE PROCEDURE `add_suministros`(
+	IN `categoria_id` INT,
+	IN `tamano_id` INT,
+	IN `producto_id` INT
+)
+BEGIN
+	INSERT INTO suministros(id_categoria, id_tamano, id_producto)
+	VALUES (categoria_id, tamano_id, producto_id);
 END//
 DELIMITER ;
 
@@ -225,6 +251,17 @@ CREATE PROCEDURE `delete_notificaByID`(
 BEGIN
 	DELETE FROM notifica
 	WHERE id_notifica = notifica_id;
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure superinstant1.delete_producto
+DELIMITER //
+CREATE PROCEDURE `delete_producto`(
+	IN `producto_id` INT
+)
+BEGIN
+DELETE FROM productos
+WHERE id_producto = producto_id;
 END//
 DELIMITER ;
 
@@ -522,7 +559,8 @@ su.id_tamano,
 t.descripcion AS 'tamano'
 FROM suministros su JOIN productos p ON su.id_producto = p.id_producto
 							JOIN categorias c ON su.id_categoria = c.id_categoria
-							JOIN tamanos t ON su.id_tamano = t.id_tamano;
+							JOIN tamanos t ON su.id_tamano = t.id_tamano
+ORDER BY su.id_suministro;
 END//
 DELIMITER ;
 
@@ -550,7 +588,7 @@ CREATE TABLE IF NOT EXISTS `productos` (
   `id_producto` int(11) NOT NULL AUTO_INCREMENT,
   `descripcion` varchar(50) NOT NULL,
   PRIMARY KEY (`id_producto`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8mb4;
 
 -- Data exporting was unselected.
 
@@ -614,9 +652,9 @@ CREATE TABLE IF NOT EXISTS `suministros` (
   KEY `FK_suministros_id_tamano` (`id_tamano`),
   KEY `FK_suministros_id_producto` (`id_producto`),
   CONSTRAINT `FK_suministros_id_categoria` FOREIGN KEY (`id_categoria`) REFERENCES `categorias` (`id_categoria`),
-  CONSTRAINT `FK_suministros_id_producto` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`),
+  CONSTRAINT `FK_suministros_id_producto` FOREIGN KEY (`id_producto`) REFERENCES `productos` (`id_producto`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_suministros_id_tamano` FOREIGN KEY (`id_tamano`) REFERENCES `tamanos` (`id_tamano`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=91 DEFAULT CHARSET=utf8mb4;
 
 -- Data exporting was unselected.
 
@@ -628,6 +666,30 @@ CREATE TABLE IF NOT EXISTS `tamanos` (
 ) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4;
 
 -- Data exporting was unselected.
+
+-- Dumping structure for procedure superinstant1.update_suministros
+DELIMITER //
+CREATE PROCEDURE `update_suministros`(
+	IN `suministro_id` INT,
+	IN `categoria_id` INT,
+	IN `tamano_id` INT,
+	IN `producto2` VARCHAR(50)
+)
+BEGIN
+DECLARE producto_id INT;
+IF EXISTS (SELECT * FROM suministros WHERE id_suministro = suministro_id) THEN
+	UPDATE suministros
+	SET id_categoria = categoria_id, id_tamano = tamano_id
+	WHERE id_suministro = suministro_id;
+	
+	SELECT id_producto FROM suministros WHERE id_suministro = suministro_id INTO producto_id;
+	
+	UPDATE productos
+	SET descripcion = producto2
+	WHERE id_producto = producto_id;
+END IF;
+END//
+DELIMITER ;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

@@ -371,14 +371,23 @@ class Conexion
         }
     }
 
-    function AddNuevosProductos($categoria, $producto, $id_producto, $tamaño){
+    function GetDevuelve($ruc_centro)
+    {
         $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
         if ($this->conexion_bd) {
-            $sql = 'CALL add_producto(' . $categoria. ',"' . $producto . '",' . $id_producto . ',' . $tamaño . '")';
+            $sql = 'CALL get_devuelveByCentroRUC("' . $ruc_centro . '")';
             $res = mysqli_query($this->conexion_bd, $sql);
             if ($res) {
+                $result = [];
+                $res_array = mysqli_fetch_array($res, MYSQLI_ASSOC);
+
+                while ($res_array) {
+                    $result[] = $res_array;
+                    $res_array = mysqli_fetch_array($res, MYSQLI_ASSOC);
+                }
+                mysqli_free_result($res);
                 mysqli_close($this->conexion_bd);
-                return 'Producto Guardado exitosamente!';
+                return $result;
             } else {
                 return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
             }
@@ -386,6 +395,43 @@ class Conexion
             return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
         }
     }
+
+    function AddProductos($producto)
+    {
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL add_productos("' . $producto . '")';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                $res_array = mysqli_fetch_array($res, MYSQLI_ASSOC);
+                mysqli_close($this->conexion_bd);
+                return $res_array;
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
+
+    function AddSuministros($id_categoria, $id_tamano, $id_producto)
+    {
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL add_suministros(' . $id_categoria . ',' . $id_tamano . ',' . $id_producto . ')';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                mysqli_close($this->conexion_bd);
+                return 'Producto Agregado Correctamente!';
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
+
+
 
     function UpdateSuministros($id_suministro, $id_categoria, $id_tamano, $producto)
     {
@@ -396,6 +442,23 @@ class Conexion
             if ($res) {
                 mysqli_close($this->conexion_bd);
                 return 'Producto Actualizado!';
+            } else {
+                return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
+            }
+        } else {
+            return "Error en la conexion: " . mysqli_connect_errno() . ' ' . mysqli_connect_error();
+        }
+    }
+
+    function EliminarProducto($id_producto)
+    {
+        $this->conexion_bd =  @mysqli_connect(SERVIDOR, USER, PASSWD, BASE_DATOS);
+        if ($this->conexion_bd) {
+            $sql = 'CALL delete_producto("' . $id_producto . '")';
+            $res = mysqli_query($this->conexion_bd, $sql);
+            if ($res) {
+                mysqli_close($this->conexion_bd);
+                return 'Se ha borrado exitosamente!';
             } else {
                 return 'Error en la consulta: ' . mysqli_error($this->conexion_bd);
             }
