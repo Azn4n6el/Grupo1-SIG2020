@@ -17,7 +17,7 @@ $notificaciones = $obj->GetNotificaciones($ruc_centro);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario</title>
+    <title>Notificaciones</title>
     <link rel="stylesheet" href="../../css/administrador.css">
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
@@ -79,6 +79,7 @@ $notificaciones = $obj->GetNotificaciones($ruc_centro);
     let links = document.getElementsByClassName('list-links');
     for (const item of links) {
         item.style.cssText = "background-color:#20373B; transform:scale(1)";
+        item.style.cssText = "type-button:hover";
     }
 
     /* ENVIAR PEDIDO AL SERVIDOR */

@@ -128,6 +128,7 @@ $suministros = $obj->GetSuministros();
     let links = document.getElementsByClassName('list-links');
     for (const item of links) {
         item.style.cssText = "background-color:#20373B; transform:scale(1)";
+        item.style.cssText = "type-button:hover";
     }
 
     let sucursales = <?php echo json_encode($sucursales); ?>;

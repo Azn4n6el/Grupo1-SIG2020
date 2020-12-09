@@ -418,3 +418,19 @@ html {
     position: relative;
     width: 50%;
 }
+
+
+/* MANTENIMIENTO DE PRODUCTOS */
+
+.add-button-container {
+    width: 15%;
+}
+
+.responsive-table2 {
+    height: 75%;
+    margin-top: 40px;
+}
+
+.edit-button {
+    margin-right: 20px;
+}
