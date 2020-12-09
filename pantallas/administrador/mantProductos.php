@@ -7,11 +7,17 @@ if (!isset($_SESSION['user-data'])) {
 }
 
 $obj = new Conexion();
+if (isset($_SESSION['message'])) {
+    $mensaje = $_SESSION['message'];
+    unset($_SESSION['message']);
+} else {
+    $mensaje = '';
+}
+
 
 $ruc_centro = $_SESSION['user-data']['ruc_centro'];
 $notificaciones = $obj->GetNotificaciones($ruc_centro);
 $suministros = $obj->GetSuministros();
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,7 +40,7 @@ $suministros = $obj->GetSuministros();
                     <h1>Mantenimiento de Productos</h1>
                 </div>
                 <div class="add-button-container">
-                    <a href="#"><button class="type-button">Agregar Producto</button></a>
+                    <a href="agregarProductos.php"><button class="type-button">Agregar Producto</button></a>
                 </div>
                 <div class="responsive-table responsive-table2">
                     <table class="custom-table">
@@ -55,7 +61,7 @@ $suministros = $obj->GetSuministros();
                                     <td><?= $suministros[$i]['categoria'] ?></td>
                                     <td><?= $suministros[$i]['tamano'] ?></td>
                                     <td><a href="actualizarProducto.php?id_suministro=<?= $suministros[$i]['id_suministro'] ?>" class="edit-button" title="Editar"><img src="https://img.icons8.com/android/26/026f9e/edit.png" /></a>
-                                        <a href="#" title="Eliminar" onclick="deleteProduct(<?= $suministros[$i]['id_suministro'] ?>)"><img src="https://img.icons8.com/metro/26/851800/trash.png" /></a></td>
+                                        <a href="#" title="Eliminar" onclick="deleteProduct(<?= $suministros[$i]['id_producto'] ?>,'<?= $suministros[$i]['producto'] ?>')"><img src="https://img.icons8.com/metro/26/851800/trash.png" /></a></td>
                                 </tr>
                             <?php endfor ?>
 
@@ -67,9 +73,25 @@ $suministros = $obj->GetSuministros();
         </div>
     </div>
 </body>
+<?php require '../cliente/custom-modal.html' ?>
 
 </html>
+<script src="../../js/globalFunctions.js"></script>
 <script>
+    let message = <?= json_encode($mensaje) ?>
+
+    //MOSTRAR MENSAJE
+    if (message != '') {
+        let modal = document.getElementById('custom-modal');
+        let msg = document.getElementById('modal-msg');
+        document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/100/000000/checkmark.png";
+        if (message.indexOf('Error') >= 0) {
+            document.getElementById('msg-icon').src = "https://img.icons8.com/officel/100/000000/high-risk.png";
+        }
+        msg.innerHTML = message;
+        modal.style.display = 'block';
+    }
+
     document.getElementsByClassName('cant-notifications')[0].innerHTML = <?= count($notificaciones) ?>;
     /* NAV NINGUNO SELECCIONADO */
     let links = document.getElementsByClassName('list-links');
@@ -84,7 +106,21 @@ $suministros = $obj->GetSuministros();
         document.getElementById('dataPedido').submit();
     }
 
-    const deleteProduct = (id) => {
-        console.log(id);
+    const deleteProduct = (id, nombre) => {
+        let modal = document.getElementById('custom-modal');
+        let msg = document.getElementById('modal-msg');
+        let noButton = document.getElementsByClassName('ok-button');
+
+        document.getElementById('msg-icon').src = "https://img.icons8.com/officel/100/000000/high-risk.png";
+        msg.innerHTML = '¿Estas seguro que quieres eliminar el producto ' + nombre + '?';
+
+        noButton[0].style.display = 'inline-block';
+        noButton[0].innerHTML = 'NO';
+
+        noButton[2].style.display = 'inline-block';
+        noButton[2].innerHTML = 'SI';
+        noButton[2].onclick = function(){location.href='../../procesos/eliminarProducto.php?id_producto=' + id}
+        console.log(noButton[2]);
+        modal.style.display = 'block';
     }
 </script>

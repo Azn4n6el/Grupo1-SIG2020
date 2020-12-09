@@ -114,7 +114,8 @@ if (isset($_SESSION['mensaje'])) {
         noButton[0].innerHTML = 'OK';
 
         noButton[1].style.display = 'none';
-
+        noButton[2].style.display = 'none';
+        
         document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/64/000000/error--v1.png";
         msg.innerHTML = mensaje;
 

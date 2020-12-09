@@ -1,22 +1,22 @@
 <?php
+
 include '../../procesos/Conexion.php';
 session_start();
-$obj = new Conexion();
 if (!isset($_SESSION['user-data'])) {
     header('Location: login.php');
 }
 
-$ruc_centro = $_SESSION['user-data']['ruc_centro'];
-$notificaciones = $obj->GetNotificaciones($ruc_centro);
-if (isset($_SESSION['dataNotifications'])) {
-    $data = $_SESSION['dataNotifications'];
-    $notification = 1;
+$obj = new Conexion();
+
+if (isset($_SESSION['message'])) {
+    $mensaje = $_SESSION['message'];
+    unset($_SESSION['message']);
 } else {
-    $notification = 0;
-    $data = "";
+    $mensaje = '';
 }
 
-$sucursales = $obj->GetSucursales($ruc_centro);
+$ruc_centro = $_SESSION['user-data']['ruc_centro'];
+$notificaciones = $obj->GetNotificaciones($ruc_centro);
 $suministros = $obj->GetSuministros();
 
 ?>
@@ -26,7 +26,7 @@ $suministros = $obj->GetSuministros();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agregar Productos</title>
+    <title>Actualizar Productos</title>
     <link rel="stylesheet" href="../../css/administrador.css">
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
@@ -38,55 +38,137 @@ $suministros = $obj->GetSuministros();
             <?php require 'dashboard-header.html' ?>
             <div class="dashboard-body">
                 <div class="body-title">
-                    <h1>Agregar - Productos</h1>
+                    <h1>Agregar Producto</h1>
                 </div>
-                <form action="../../procesos/guardarProducto.php" method="post" id="enviarProductosForm" class="productosForm">
-
-
+                <div class="add-button-container">
+                    <a href="mantProductos.php"><button class="type-button">Regresar</button></a>
+                </div>
+                <form action="../../procesos/agregarProducto.php" method="post" id="enviarProductosForm" class="productosForm">
                     <div class="form-group">
-                        <div class="form-input4">
-                            <label for="categoria">Categoría</label>                                 
+                        <div class="form-input2">
+                            <label for="categoria">Categoría</label>
+                            <div class="select-container">
+                                <select name="categoria" id="categoria" class="enviar-input custom-select" required onchange="showProducts(this.value)">
+                                    <option disabled selected>Selecione una categoría</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="form-input4">
-                            <input type="text" id="categoria" name="categoria" class="enviar-input custom-select" >                                  
+                        <div class="form-input2">
+                            <label for="tamano">Tamaño</label>
+                            <div class="select-container">
+                                <select name="tamano" id="tamano" class="enviar-input custom-select" required disabled>
+                                    <option disabled selected>Selecione un tamaño</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <div class="form-input4">
-                            <label for="Producto">Producto</label>                                 
-                        </div>
-                        <div class="form-input4">
-                            <input type="text" id="producto" name="producto" class="enviar-input custom-select" >                                  
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="form-input4">
-                            <label for="id-producto">ID-Producto</label>                                 
-                        </div>
-                        <div class="form-input4">
-                            <input type="text" id="id-producto" name="id-producto" class="enviar-input custom-select" >                                  
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="form-input4">
-                            <label for="tamaño">Tamaño</label>                                 
-                        </div>
-                        <div class="form-input4">
-                            <input type="text" id="tamaño" name="tamaño" class="enviar-input custom-select" >                                  
+                        <div class="form-input2">
+                            <label for="producto">Producto</label>
+                            <input type="text" class="enviar-input" name="producto" id="producto">
                         </div>
                     </div>
                     <div class="enviar-button-container">
-                        <input type="submit" value="Guardar" class="enviar-button">
+                        <input type="submit" class="enviar-button" value="Agregar">
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
-    
 </body>
+<?php require '../cliente/custom-modal.html' ?>
 
 </html>
+<script src="../../js/globalFunctions.js"></script>
+<script>
+    document.getElementsByClassName('cant-notifications')[0].innerHTML = <?= count($notificaciones) ?>;
+    /* NAV NINGUNO SELECCIONADO */
+    let links = document.getElementsByClassName('list-links');
+    for (const item of links) {
+        item.style.cssText = "background-color:#20373B; transform:scale(1)";
+        item.style.cssText = "type-button:hover";
+    }
+
+    let message = <?= json_encode($mensaje); ?>;
+    let suministros = <?php echo json_encode($suministros); ?>;
+
+
+    let productoText = document.getElementById('producto');
+    let categoriasSelect = document.getElementById('categoria');
+    let tamanosSelect = document.getElementById('tamano');
+
+    let categorias = [];
+    let tamanos = [];
+
+    let uniqueCategory = [];
+    let uniqueTamanos = [];
+
+    let tamanoSelected = 0;
+    let categoriaSelected = 0;
+
+
+    // TRAE TODAS LAS CATEGORIAS UNICAS
+    for (const item of suministros) {
+        if (uniqueCategory.indexOf(item.categoria) < 0) {
+            uniqueCategory.push(item.categoria);
+            let categoryObject = {
+                categoria: item.categoria,
+                categoriaID: item.id_categoria
+            }
+            categorias.push(categoryObject);
+        }
+    }
+
+    for (let i = 0; i < categorias.length; i++) {
+        let option = document.createElement('option');
+        option.text = categorias[i].categoria;
+        option.value = categorias[i].categoriaID;
+        categoriasSelect.appendChild(option);
+    }
+
+
+    const showProducts = (value) => {
+
+        //VACIAR LOS SELECTS
+        tamanos = [];
+        uniqueTamanos = [];
+
+        tamanosSelect.innerText = '';
+
+        for (const item of suministros) {
+            if (item.id_categoria == value) {
+
+                if (uniqueTamanos.indexOf(item.tamano) < 0) {
+                    uniqueTamanos.push(item.tamano);
+                    let tamanosObject = {
+                        tamano: item.tamano,
+                        tamanoID: item.id_tamano
+                    }
+                    tamanos.push(tamanosObject);
+                }
+            }
+        }
+
+        tamanosSelect.disabled = false;
+
+        //LLENAR SELECTS
+        for (let i = 0; i < tamanos.length; i++) {
+            let option = document.createElement('option');
+            option.text = tamanos[i].tamano;
+            option.value = tamanos[i].tamanoID;
+            tamanosSelect.appendChild(option);
+        }
+    }
+
+    //MOSTRAR MENSAJE
+    if (message != '') {
+        let modal = document.getElementById('custom-modal');
+        let msg = document.getElementById('modal-msg');
+        document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/100/000000/checkmark.png";
+        if (message.indexOf('Error') >= 0) {
+            document.getElementById('msg-icon').src = "https://img.icons8.com/officel/100/000000/high-risk.png";
+        }
+        msg.innerHTML = message;
+        modal.style.display = 'block';
+    }
+</script>
