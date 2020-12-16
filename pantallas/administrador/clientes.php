@@ -515,8 +515,10 @@ if (isset($_SESSION['message'])) {
             }
         } else {
             /* POR PROVINCIA */
+
             for (let i = 0; i < provincias.length; i++) {
-                data.insertAdjacentHTML("beforeend", `<tr><td>${sucursales[i]['provincia']}</td></tr>`)
+                data.insertAdjacentHTML("beforeend", `<tr><td>${provincias[i]['provincia']}</td></tr>`)
+
 
                 for (let j = 0; j < suministrosName.length; j++) {
                     let cantCompra = 0;
