@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@100&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap');
+* {
+    padding: 0px;
+    margin: 0px;
+    --main-color: #B5EECC;
+    --secondary-color: #83C3A9;
+    --third-color: #d5f5e8;
+    --banner-color: #FEECC5;
+    --second-nav: #FCBD34;
+    --button-color: #20373B;
+    --letter-color: #0d242c;
+    --form-color: #FCD06F;
+    --title-color: #f1471d;
+    font-family: 'Barlow', sans-serif;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+    text-decoration: none;
+}
+
+ul,
+li {
+    list-style: none;
+}
+
+.custom-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.img-success {
+    text-align: center;
+}
+
+.modal-box {
+    animation-name: slide-down;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    margin: auto;
+    background-color: white;
+    padding: 25px;
+    border-radius: 5px;
+    width: 25%;
+    min-width: 250px;
+}
+
+@keyframes slide-down {
+    0% {
+        margin-top: -20%;
+    }
+    100% {
+        margin-top: 10%;
+    }
+}
+
+.modal-message {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.modal-footer {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.ok-button {
+    padding: 10px;
+    width: 100px;
+    border-radius: 5px;
+    background-color: var(--main-color);
+    border: none;
+    cursor: pointer;
+    font-size: 1.3rem;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.no-button {
+    background-color: var(--form-color);
+    display: none;
+    margin-left: 20px;
+}
+
+.ok-button:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+
+/* FORM STYLES */
+
+.form-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: 0 20px;
+    margin-bottom: 20px;
+}
+
+.form-input2 {
+    display: flex;
+    flex-direction: column;
+    width: 35%;
+    min-width: 200px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.form-input3 {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    min-width: 200px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+.form-input4 {
+    background-color: transparent;
+    border-radius: 5px;
+    font-size: 3rem;
+    padding: 5px;
+    text-indent: 40px;
+    width: 400px;
+}
+
+.enviar-input {
+    margin-top: 10px;
+    font-size: 1.3rem;
+    padding: 5px;
+    border: 2px solid black;
+}
+
+
+/* CUSTOM NUMBER INPUT */
+
+.number-input {
+    appearance: textfield;
+    width: 100%;
+    box-sizing: border-box
+}
+
+.number-container {
+    display: flex;
+    width: 100%;
+    position: relative;
+}
+
+.number-button-container {
+    position: absolute;
+    right: 2.5px;
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+}
+
+.number-button {
+    width: 25px;
+    height: 17px;
+    font-size: 0.9rem;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.number-button:hover {
+    transform: scale(1.5);
+    transition: transform 0.2s;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+
+/* CUSTOM SELECT */
+
+.custom-select {
+    appearance: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.select-container {
+    width: 100%;
+    position: relative;
+}
+
+.select-container:after {
+    content: '▼';
+    font-size: 24px;
+    position: absolute;
+    top: 14px;
+    right: 9px;
+    color: var(--secondary-color);
+    pointer-events: none;
+    transition: transform 0.2s;
+}
+
+.select-container:hover:after {
+    transform: scale(1.5);
+    transition: transform 0.2s;
+}

@@ -11,9 +11,17 @@ $nombre = $_SESSION['user-data']['usuario'];
 
 $notificaciones = $obj->GetNotificaciones($ruc_centro);
 $sucursales = $obj->GetSucursales($ruc_centro);
-$inventario = $obj->GetInventario($ruc_centro);
+$reabastece = $obj->GetReabastece($ruc_centro);
 $suministros = $obj->GetSuministros();
 
+
+
+if (isset($_SESSION['message'])) {
+    $mensaje = $_SESSION['message'];
+    unset($_SESSION['message']);
+} else {
+    $mensaje = '';
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,7 +29,7 @@ $suministros = $obj->GetSuministros();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventario</title>
+    <title>Clientes</title>
     <link rel="stylesheet" href="../../css/administrador.css">
     <link rel="stylesheet" href="../../css/styles.css">
 </head>
@@ -36,7 +44,7 @@ $suministros = $obj->GetSuministros();
                     <h1>Bienvenido, <?= $nombre ?></h1>
                 </div>
                 <div class="body-title">
-                    <h1>Inventario</h1>
+                    <h1>Clientes</h1>
                 </div>
                 <div class="filtros-container">
                     <div class="filtros-title">
@@ -80,7 +88,7 @@ $suministros = $obj->GetSuministros();
                         </div>
                     </div>
                     <div class="chart-container">
-                        <canvas id="inventario"></canvas>
+                        <canvas id="compras"></canvas>
                     </div>
                     <div class="responsive-table">
                         <table class="custom-table">
@@ -119,6 +127,7 @@ $suministros = $obj->GetSuministros();
         </div>
     </div>
 </body>
+<?php require '../cliente/custom-modal.html' ?>
 
 </html>
 <script src="../../js/chart_v2.9.4.js"></script>
@@ -127,18 +136,19 @@ $suministros = $obj->GetSuministros();
     document.getElementsByClassName('cant-notifications')[0].innerHTML = <?= count($notificaciones) ?>;
     //SELECCIONADO EN EL NAVBAR LA PANTALLA CORRESPONDIENTE
     let links = document.getElementsByClassName('list-links');
-
-    links[2].style.cssText = 'background-color:var(--form-color); transform:scale(1.1);';
+    let message = <?php echo json_encode($mensaje) ?>;
+    links[0].style.cssText = 'background-color:var(--form-color); transform:scale(1.1);';
 
     let sucursales = <?php echo json_encode($sucursales); ?>;
     let suministros = <?php echo json_encode($suministros); ?>;
-    let inventario = <?php echo json_encode($inventario); ?>;
+    let reabastece = <?php echo json_encode($reabastece); ?>;
 
     let sucursalSelect = document.getElementById('sucursal');
     let categoriasSelect = document.getElementById('categoria');
     let tamanosSelect = document.getElementById('tamano');
-    let inventariosChart = document.getElementById('inventario');
+    let comprasChart = document.getElementById('compras');
     let provinciasSelect = document.getElementById('provincia');
+
 
     let categorias = [];
     let tamanos = [];
@@ -162,7 +172,7 @@ $suministros = $obj->GetSuministros();
 
 
     //INICIALIZAR GRÁFICA
-    let chart = createChart(inventariosChart, 0, 0, 'Inventario', 'Cajas en Stock', 'Productos', 'Cajas');
+    let chart = createChart(comprasChart, 0, 0, 'Compras Realizadas', 'Cajas Compradas', 'Productos', 'Cajas');
 
     //LLENAR LOS SELECTS
     for (const item of sucursales) {
@@ -171,6 +181,7 @@ $suministros = $obj->GetSuministros();
         option.value = item.ruc_sucursal;
         sucursalSelect.appendChild(option);
     }
+
 
     // TRAE TODAS LAS CATEGORIAS UNICAS
     for (const item of suministros) {
@@ -270,9 +281,9 @@ $suministros = $obj->GetSuministros();
 
         sucursalSelect.disabled = true;
         provinciasSelect.disabled = true;
-
+        let parent = document.getElementsByClassName("filtros-container");
         let suministrosName = [];
-        let cantidades = [];
+        let compras = [];
 
         if (isAgua) {
             for (const item of tamanos) {
@@ -281,13 +292,13 @@ $suministros = $obj->GetSuministros();
 
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
-                    let cantidad = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (item.producto == 'Agua' && item.tamano == suministrosName[i]) {
-                            cantidad = cantidad + parseInt(item.cantidad)
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
-                    cantidades.push(cantidad);
+                    compras.push(cantCompra);
                 }
             }
 
@@ -301,21 +312,21 @@ $suministros = $obj->GetSuministros();
 
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
-                    let cantidad = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value) {
-                            cantidad = cantidad + parseInt(item.cantidad)
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
-                    cantidades.push(cantidad);
+                    compras.push(cantCompra);
                 }
             }
+
+
         }
 
-
-        updateChart(chart, suministrosName, cantidades);
+        updateChart(chart, suministrosName, compras);
         updateReport(suministrosName);
-
     }
 
     const showSucursal = () => {
@@ -327,9 +338,8 @@ $suministros = $obj->GetSuministros();
 
         sucursalSelect.disabled = false;
         provinciasSelect.disabled = true;
-
         let suministrosName = [];
-        let cantidades = [];
+        let compras = [];
 
         //SI LA CATEGORIA ES AGUA
         if (isAgua) {
@@ -342,13 +352,13 @@ $suministros = $obj->GetSuministros();
             //SUMA DE CANTIDADES
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
-                    let cantidad = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (item.producto == 'Agua' && item.tamano == suministrosName[i] && item.ruc_sucursal == sucursalSelect.value) {
-                            cantidad = cantidad + parseInt(item.cantidad)
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
-                    cantidades.push(cantidad);
+                    compras.push(cantCompra);
                 }
             }
 
@@ -363,20 +373,19 @@ $suministros = $obj->GetSuministros();
             //SUMA DE CANTIDADES
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
-                    let cantidad = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursalSelect.value) {
-                            cantidad = cantidad + parseInt(item.cantidad)
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
-                    cantidades.push(cantidad);
+                    compras.push(cantCompra);
                 }
             }
         }
 
-        updateChart(chart, suministrosName, cantidades);
+        updateChart(chart, suministrosName, compras);
         updateReport(suministrosName);
-
     }
 
     const showProvincia = () => {
@@ -390,7 +399,7 @@ $suministros = $obj->GetSuministros();
         provinciasSelect.disabled = false;
 
         let suministrosName = [];
-        let cantidades = [];
+        let compras = [];
 
         //SI LA CATEGORIA ES AGUA
         if (isAgua) {
@@ -403,13 +412,13 @@ $suministros = $obj->GetSuministros();
             //SUMA DE CANTIDADES
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
-                    let cantidad = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (item.producto == 'Agua' && item.tamano == suministrosName[i] && item.id_provincia == provinciasSelect.value) {
-                            cantidad = cantidad + parseInt(item.cantidad)
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
-                    cantidades.push(cantidad);
+                    compras.push(cantCompra);
                 }
             }
 
@@ -424,19 +433,20 @@ $suministros = $obj->GetSuministros();
             //SUMA DE CANTIDADES
             if (suministrosName.length > 0) {
                 for (let i = 0; i < suministrosName.length; i++) {
-                    let cantidad = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (item.producto == suministrosName[i] && item.id_tamano == tamanosSelect.value && item.id_provincia == provinciasSelect.value) {
-                            cantidad = cantidad + parseInt(item.cantidad)
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
-                    cantidades.push(cantidad);
+                    compras.push(cantCompra);
                 }
             }
         }
 
-        updateChart(chart, suministrosName, cantidades);
+        updateChart(chart, suministrosName, compras);
         updateReport(suministrosName);
+
     }
 
     const updateReport = (suministrosName) => {
@@ -456,69 +466,74 @@ $suministros = $obj->GetSuministros();
             titulos.insertAdjacentHTML("beforeend", `<th>Provincia</th>`)
         }
 
+
         for (let i = 0; i < suministrosName.length; i++) {
             titulos.insertAdjacentHTML("beforeend", `<th>${suministrosName[i]}</th>`)
         }
 
+
         if (provinciasSelect.disabled) {
+            /*LLENANDO LA TABLA*/
             for (let i = 0; i < sucursales.length; i++) {
                 data.insertAdjacentHTML("beforeend", `<tr><td>${sucursales[i]['direccion']}</td></tr>`)
                 data.children[i].insertAdjacentHTML("beforeend", `<td>${sucursales[i]['nombre']}</td>`)
                 data.children[i].insertAdjacentHTML("beforeend", `<td>${sucursales[i]['provincia']}</td>`)
-
                 for (let j = 0; j < suministrosName.length; j++) {
-                    let cantidad = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (isAgua) {
                             if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
-                                cantidad = cantidad + parseInt(item.cantidad);
+                                cantCompra = cantCompra + parseInt(item.cantidad);
                             }
                         } else {
                             if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.ruc_sucursal == sucursales[i]['ruc_sucursal']) {
-                                cantidad = cantidad + parseInt(item.cantidad);
+                                cantCompra = cantCompra + parseInt(item.cantidad);
                             }
                         }
                     }
-                    data.children[i].insertAdjacentHTML("beforeend", `<td>${cantidad}</td>`)
+                    data.children[i].insertAdjacentHTML("beforeend", `<td>${cantCompra}</td>`)
                 }
             }
 
             let childCount = data.childElementCount;
             data.insertAdjacentHTML("beforeend", `<tr><td colspan=3><strong>Total:</strong></td></tr>`)
             for (let j = 0; j < suministrosName.length; j++) {
-                let cantidad = 0;
-                for (const item of inventario) {
+                let cantCompra = 0;
+                for (const item of reabastece) {
                     if (isAgua) {
                         if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
-                            cantidad = cantidad + parseInt(item.cantidad);
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     } else {
                         if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
-                            cantidad = cantidad + parseInt(item.cantidad);
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
 
                 }
-                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>${cantidad}</strong></td>`)
+                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>${cantCompra}</strong></td>`)
             }
         } else {
+            /* POR PROVINCIA */
+
             for (let i = 0; i < provincias.length; i++) {
-                data.insertAdjacentHTML("beforeend", `<tr><td>${sucursales[i]['provincia']}</td></tr>`)
+                data.insertAdjacentHTML("beforeend", `<tr><td>${provincias[i]['provincia']}</td></tr>`)
+
 
                 for (let j = 0; j < suministrosName.length; j++) {
-                    let ganancias = 0;
-                    for (const item of inventario) {
+                    let cantCompra = 0;
+                    for (const item of reabastece) {
                         if (isAgua) {
                             if (item.producto == "Agua" && item.tamano == suministrosName[j] && item.id_provincia == provincias[i].provinciaID) {
-                                ganancias = ganancias + parseInt(item.cantidad);
+                                cantCompra = cantCompra + parseInt(item.cantidad);
                             }
                         } else {
                             if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value && item.id_provincia == provincias[i].provinciaID) {
-                                ganancias = ganancias + parseInt(item.cantidad);
+                                cantCompra = cantCompra + parseInt(item.cantidad);
                             }
                         }
                     }
-                    data.children[i].insertAdjacentHTML("beforeend", `<td>${ganancias}</td>`)
+                    data.children[i].insertAdjacentHTML("beforeend", `<td>${cantCompra}</td>`)
                 }
 
             }
@@ -526,23 +541,26 @@ $suministros = $obj->GetSuministros();
             let childCount = data.childElementCount;
             data.insertAdjacentHTML("beforeend", `<tr><td><strong>Total:</strong></td></tr>`)
             for (let j = 0; j < suministrosName.length; j++) {
-                let ganancias = 0;
-                for (const item of inventario) {
+                let cantCompra = 0;
+                for (const item of reabastece) {
                     if (isAgua) {
                         if (item.producto == "Agua" && item.tamano == suministrosName[j]) {
-                            ganancias = ganancias + parseInt(item.cantidad);
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     } else {
                         if (item.producto == suministrosName[j] && item.id_tamano == tamanosSelect.value) {
-                            ganancias = ganancias + parseInt(item.cantidad);
+                            cantCompra = cantCompra + parseInt(item.cantidad);
                         }
                     }
                 }
-                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>${ganancias}</strong></td>`)
+                data.children[childCount].insertAdjacentHTML("beforeend", `<td><strong>${cantCompra}</strong></td>`)
             }
+
         }
 
+
     }
+
 
     const validateType = () => {
         if (sucursalSelect.disabled && provinciasSelect.disabled) {
@@ -553,6 +571,19 @@ $suministros = $obj->GetSuministros();
             showProvincia();
         }
     }
+
+    //MOSTRAR MENSAJE
+    if (message != '') {
+        let modal = document.getElementById('custom-modal');
+        let msg = document.getElementById('modal-msg');
+        document.getElementById('msg-icon').src = "https://img.icons8.com/flat_round/100/000000/checkmark.png";
+        if (message.indexOf('Error') >= 0) {
+            document.getElementById('msg-icon').src = "https://img.icons8.com/officel/100/000000/high-risk.png";
+        }
+        msg.innerHTML = message;
+        modal.style.display = 'block';
+    }
+
 
     showProducts(categorias[0].categoriaID, 'Sodas');
 </script>

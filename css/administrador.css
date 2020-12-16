@@ -1,0 +1,436 @@
+html {
+    overflow-y: hidden;
+}
+
+
+/*ADMINISTRADOR LOGIN*/
+
+.login-body {
+    height: 100%;
+    width: 100%;
+}
+
+.login-header {
+    min-height: 125px;
+    height: 25vh;
+    background-color: white;
+}
+
+.login-body-background {
+    background-color: var(--main-color);
+}
+
+.images-container {
+    position: absolute;
+    top: 15vh;
+    left: 15vw;
+}
+
+.basket-image {
+    position: relative;
+    top: 25px;
+    left: 5%;
+}
+
+.login-form {
+    padding: 10px;
+    position: absolute;
+    top: 15vh;
+    right: 15vw;
+    width: 40vw;
+    background-color: var(--form-color);
+    min-width: 250px;
+}
+
+.form-header-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+.form-title {
+    font-size: 3rem;
+    font-family: 'Fjalla One', sans-serif;
+    text-align: center;
+}
+
+.form-rope {
+    position: absolute;
+    bottom: 85%;
+    width: 4px;
+    height: 100vh;
+    background-color: black;
+}
+
+@media only screen and (max-width: 800px) {
+    .form-rope {
+        bottom: 83%;
+    }
+}
+
+.form-circle {
+    align-self: center;
+    width: 5px;
+    height: 10px;
+    border-radius: 50%;
+    border: 3px solid black;
+}
+
+.form-circle2 {
+    width: 5px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: black;
+}
+
+.login-title {
+    margin-top: 20px;
+    font-family: 'Fjalla One', sans-serif;
+    font-size: 2.4rem;
+    text-align: center;
+}
+
+.form-input {
+    display: flex;
+    flex-direction: column;
+    margin: 25px 20% 0 20%;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.input-text {
+    margin-top: 5px;
+    height: 20px;
+    font-size: 1.2rem;
+    padding: 5px;
+    border: 2px solid white;
+    background-color: transparent;
+}
+
+.login-button {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.sign-button {
+    padding: 5px;
+    width: 25%;
+    font-size: 1.5rem;
+    background-color: var(--secondary-color);
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+    min-width: 150px;
+}
+
+.sign-button:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+.error-message {
+    margin-top: 10px;
+    text-align: center;
+    color: rgb(248, 110, 110);
+}
+
+
+/* DASHBOARD SIDENAV*/
+
+.dashboard-nav {
+    background-color: var(--secondary-color);
+    min-width: 250px;
+    max-width: 250px;
+    height: 100vh;
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.nav-title {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    font-size: 1.7rem;
+    text-align: center;
+    color: white;
+}
+
+.list-links {
+    display: block;
+    background-color: var(--button-color);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    margin: 30px 40px;
+    font-size: 1.3rem;
+    transition: transform 0.1s;
+}
+
+.list-links:hover {
+    transform: scale(1.1);
+    transition: transform 0.1s;
+}
+
+.list-links li {
+    color: white;
+    font-weight: bolder;
+}
+
+.logout {
+    font-weight: bolder;
+    color: #FFC000;
+    width: 150px;
+    bottom: 20px;
+}
+
+
+/* DASHBOARD HEADER */
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--main-color);
+    width: 100%;
+    height: 100px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.dashboard-logo {
+    margin-left: 20px;
+    margin-right: 50px;
+}
+
+.header-right,
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.links-image {
+    display: block;
+    margin-top: 15px;
+    margin-right: 20px;
+}
+
+.cant-notifications {
+    position: absolute;
+    top: 50px;
+    right: 135px;
+    background-color: var(--title-color);
+    ;
+    color: white;
+    border-radius: 50%;
+    padding: 5px;
+    font-weight: bold;
+}
+
+
+/* ALL DASHBOARD */
+
+.dashboard-container {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    min-width: 700px;
+}
+
+.dashboard-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.dashboard-body {
+    padding: 20px;
+    padding-top: 40px;
+    overflow: auto;
+    max-height: 85vh;
+    min-height: 500px;
+    box-sizing: border-box;
+}
+
+
+/* PANTALLA NOTIFICACIONES */
+
+.custom-table {
+    border-collapse: collapse;
+    text-align: center;
+    width: 100%;
+}
+
+.responsive-table {
+    overflow-x: auto;
+    height: 85%;
+    min-width: 1000px;
+}
+
+.custom-table td,
+.custom-table th {
+    border: 2px solid var(--title-color);
+    ;
+    padding: 5px;
+}
+
+.custom-table th {
+    font-size: 1.6rem;
+    color: var(--title-color);
+    ;
+    border-bottom: 3px solid var(--title-color);
+    ;
+    ;
+}
+
+.custom-table td {
+    font-size: 1.4rem;
+}
+
+.custom-table tbody tr:hover td {
+    background-color: var(--banner-color);
+}
+
+.custom-table tbody tr:nth-child(odd) {
+    background-color: #FCDAD2;
+}
+
+.table-send {
+    position: relative;
+    top: 5px;
+    display: block;
+    width: 50%;
+    margin: auto;
+    cursor: pointer;
+}
+
+.body-title {
+    color: var(--title-color);
+    ;
+    font-size: 1.3rem;
+    margin-bottom: 40px;
+}
+
+
+/* PANTALLA ENVIAR PEDIDOS */
+
+.total-text {
+    text-align: center;
+}
+
+.disabled-total {
+    background-color: rgb(236, 236, 236);
+    cursor: not-allowed;
+}
+
+.enviar-button-container {
+    text-align: end;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+.enviar-button {
+    padding: 10px 20px;
+    font-size: 1.4rem;
+    font-weight: bold;
+    background-color: white;
+    border-radius: 10px;
+    color: var(--title-color);
+    border: 2px solid var(--title-color);
+    ;
+    cursor: pointer;
+}
+
+
+/* PANTALLA CLIENTES */
+
+.filtros-container {
+    min-width: 1000px;
+}
+
+.filtros-title {
+    margin: 0 20px;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+}
+
+.filter-type {
+    margin: 0 20px;
+    display: flex;
+    width: 50%;
+}
+
+.type-button {
+    padding: 5px;
+    width: 100%;
+    font-size: 1.2rem;
+    margin-left: 40px;
+    background-color: var(--button-color);
+    border-radius: 8px;
+    padding: 10px;
+    color: white;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.type-button:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s;
+}
+
+.chart-container {
+    margin: 40px auto;
+    position: relative;
+    width: 70vw;
+    min-width: 1000px;
+}
+
+
+/* TABLE REPORTS */
+
+.reports-table {
+    width: 100%;
+    text-align: center;
+    border-collapse: collapse;
+}
+
+.reports-table thead tr th,
+.reports-table tbody tr td {
+    padding: 5px;
+    border: 1px solid black;
+}
+
+.charts-pie-container {
+    margin: 50px 0;
+    display: flex;
+    min-width: 1000px;
+}
+
+.chartPie-container {
+    position: relative;
+    width: 50%;
+}
+
+
+/* MANTENIMIENTO DE PRODUCTOS */
+
+.add-button-container {
+    width: 15%;
+}
+
+.responsive-table2 {
+    height: 75%;
+    margin-top: 40px;
+}
+
+.edit-button {
+    margin-right: 20px;
+}
